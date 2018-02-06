@@ -17,7 +17,31 @@ class ElectionEvent(models.Model):
         (GENERAL_RUNOFF, 'General Runoff')
     )
 
-    label = models.CharField(max_length=100, choices=LABELS)
+    OPEN = 'open'
+    SEMI_OPEN = 'semi-open'
+    SEMI_CLOSED = 'semi-closed'
+    CLOSED = 'closed'
+    JUNGLE = 'jungle'
+
+    PRIMARY_TYPES = (
+        (OPEN, 'Open'),
+        (SEMI_OPEN, 'Semi-open'),
+        (SEMI_CLOSED, 'Semi-closed'),
+        (CLOSED, 'Closed'),
+        (JUNGLE, 'Jungle')
+    )
+
+    label = models.CharField(max_length=50, choices=LABELS)
+    dem_primary_type = models.CharField(
+        max_length=50,
+        choices=PRIMARY_TYPES,
+        null=True, blank=True
+    )
+    gop_primary_type = models.CharField(
+        max_length=50,
+        choices=PRIMARY_TYPES,
+        null=True, blank=True
+    )
     election_day = models.ForeignKey(ElectionDay, on_delete=models.PROTECT)
     division = models.ForeignKey(Division, on_delete=models.PROTECT)
     early_vote_start = models.DateField(null=True, blank=True)

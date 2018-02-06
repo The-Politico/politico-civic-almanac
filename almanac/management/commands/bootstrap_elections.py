@@ -1,137 +1,124 @@
 import csv
 import requests
 
-from datetime import date
+from almanac.models import ElectionEvent
 from django.core.management.base import BaseCommand
-from election.models import (ElectionDay, Election, ElectionCycle,
-                             ElectionType, Race)
-from geography.models import Division
-from government.models import Office, Body, Party
-from itertools import chain
-from tqdm import tqdm
-
-calendar_url = 'https://raw.githubusercontent.com/democrats/election-calendar/master/2018/p2018_federal.csv'
-reference_url = 'https://raw.githubusercontent.com/democrats/election-calendar/master/2018/state_reference.csv'
+from election.models import (Election, ElectionType, Race)
+from geography.models import DivisionLevel
+from government.models import Body, Office, Party
 
 
 class Command(BaseCommand):
     help = (
-        'Gets data from Democrats election calendar and bootstraps '
-        'various election models'
+        'Hydrates election models from electionevent objects'
     )
-    cycle, created = ElectionCycle.objects.get_or_create(name='2018')
+
+    dem = Party.objects.get(ap_code='dem')
+    gop = Party.objects.get(ap_code='gop')
+    parties = [dem, gop]
+    reference_url = ('https://raw.githubusercontent.com/The-Politico/'
+                     'election-calendar/master/2018/state_reference.csv')
 
     def handle(self, *args, **options):
-        ref = requests.get(reference_url)
-        reference = csv.DictReader(ref.text.splitlines())
+        cycle_events = ElectionEvent.objects.filter(
+            election_day__cycle__name='2018'
+        )
 
-        cal = requests.get(calendar_url)
-        rows = csv.DictReader(cal.text.splitlines())
+        for event in cycle_events:
+            self.hydrate_elections(event)
 
-        for row in rows:
-            self.process_state(row, reference)
-
-    def process_state(self, row, reference):
-        for ref_row in reference:
-            if ref_row['state_code'] == row['state_code']:
-                state_info = ref_row
-                break
-
-        if state_info['is_state'] == 'no':
+    def hydrate_elections(self, event):
+        # skip runoffs
+        if event.label in [
+            ElectionEvent.PRIMARIES_RUNOFF,
+            ElectionEvent.GENERAL_RUNOFF
+        ]:
             return
 
-        division = Division.objects.get(
-            code_components__postal=row['state_code']
+        # get all our offices
+        offices = []
+
+        # start with the house
+        districts = event.division.children.filter(
+            level__name=DivisionLevel.DISTRICT
         )
+        for district in districts:
+            office = district.offices.get(
+                body__label='U.S. House of Representatives'
+            )
+            offices.append(office)
 
-        offices_for_election = self.get_offices(row, division, state_info)
+        # determine by class if there is a senate seat
+        senators = event.division.offices.filter(body__label='U.S. Senate')
+        for senator in senators:
+            if senator.senate_class == '1':
+                offices.append(senator)
 
-        print('Adding elections for {0}'.format(state_info['state_name']))
-        for office in tqdm(offices_for_election):
-            self.create_elections(row, office, division, state_info)
+        # determine by reference table if there is a governorship
+        r = requests.get(self.reference_url)
+        reader = csv.DictReader(r.text.splitlines())
+        for row in reader:
+            if event.division.code_components['postal'] == row['state_code']:
+                state_ref = row
+                break
 
-    def get_offices(self, row, division, state_info):
-        # get all house seats in state
-        house = Body.objects.get(
-            label='U.S. House of Representatives'
-        )
-        house_offices = Office.objects.filter(
-            division__parent=division,
-            body=house
-        )
+        if state_ref['governor_election_2018'] == 'yes':
+            governor = event.division.offices.get(
+                slug__endswith='governor'
+            )
+            offices.append(governor)
 
-        # see if there are senators
-        senate = Body.objects.get(label='U.S. Senate')
-        senate_offices = Office.objects.filter(
-            division=division,
-            body=senate,
-            senate_class=Office.FIRST_CLASS
-        )
+        for office in offices:
+            race, created = Race.objects.get_or_create(
+                office=office,
+                cycle=event.election_day.cycle
+            )
+            if event.label == ElectionEvent.PRIMARIES:
+                self.create_primary_elections(event, office, race)
+            elif event.label == ElectionEvent.GENERAL:
+                self.create_general_election(event, office, race)
 
-        if state_info['governor_election_2018']:
-            governor = Office.objects.filter(
-                division=division,
-                name='{0} Governor'.format(state_info['state_name'])
+    def create_primary_elections(self, event, office, race):
+        if event.dem_primary_type == ElectionEvent.JUNGLE:
+            election_type, created = ElectionType.objects.get_or_create(
+                label='Jungle Primary',
+                short_label='Jungle',
+                slug=ElectionType.JUNGLE_PRIMARY,
+                number_of_winners=2,
             )
 
-        return list(chain(
-            house_offices,
-            senate_offices,
-            governor
-        ))
-
-    def create_elections(self, row, office, division, state_info):
-        race, created = Race.objects.get_or_create(
-            office=office,
-            cycle=self.cycle,
-        )
-        dem = Party.objects.get(ap_code='dem')
-        gop = Party.objects.get(ap_code='gop')
-        parties = [dem, gop]
-
-        if row['p2018_federal_election_date']:
-            primary_day, created = ElectionDay.objects.get_or_create(
-                cycle=self.cycle,
-                date=row['p2018_federal_election_date'],
+            election, created = Election.objects.get_or_create(
+                election_type=election_type,
+                race=race,
+                election_day=event.election_day,
+                division=office.division
+            )
+        else:
+            election_type, created = ElectionType.objects.get_or_create(
+                label='Party Primary',
+                short_label='Primary',
+                slug=ElectionType.PARTY_PRIMARY,
             )
 
-            for party in parties:
-                cal_party_slug = 'dem' if party.ap_code == 'dem' else 'rep'
-                primary_type = row['p2018_federal_{0}_election_type'.format(
-                    cal_party_slug
-                )]
-                label = '{0} Primary'.format(primary_type.title())
-
-                election_type, created = ElectionType.objects.get_or_create(
-                    label=label,
-                    slug='{0}-primary'.format(primary_type),
-                    ap_code='P',
-                    primary_type=primary_type
-                )
-
+            for party in self.parties:
                 election, created = Election.objects.get_or_create(
                     election_type=election_type,
                     race=race,
-                    party=party,
-                    election_day=primary_day,
-                    division=division
+                    election_day=event.election_day,
+                    division=office.division,
+                    party=party
                 )
 
-        general_election_day, created = ElectionDay.objects.get_or_create(
-            cycle=self.cycle,
-            date=date(2018, 11, 6)
-        )
-
-        general_election_type, created = ElectionType.objects.get_or_create(
+    def create_general_election(self, event, office, race):
+        election_type, created = ElectionType.objects.get_or_create(
             label='General Election',
             short_label='General',
-            slug='general',
-            ap_code='G',
+            slug=ElectionType.GENERAL
         )
 
-        general_election, created = Election.objects.get_or_create(
-            election_type=general_election_type,
+        election, created = Election.objects.get_or_create(
+            election_type=election_type,
             race=race,
-            election_day=general_election_day,
-            division=division
+            election_day=event.election_day,
+            division=office.division,
         )
