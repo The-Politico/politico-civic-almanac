@@ -9,18 +9,6 @@ from almanac.models import ElectionEvent
 from election.models import ElectionDay, ElectionCycle
 from geography.models import Division
 
-base_url = ('https://raw.githubusercontent.com/The-Politico/election-calendar/'
-            'master/2018')
-
-calendar_url = '{0}/p2018_federal.csv'.format(base_url)
-reference_url = '{0}/state_reference.csv'.format(base_url)
-primary_poll_closing_url = '{0}/p2018_federal_eday.csv'.format(base_url)
-primary_early_voting_url = '{0}/p2018_federal_ev.csv'.format(base_url)
-primary_registration_url = '{0}/p2018_federal_vr.csv'.format(base_url)
-general_poll_closing_url = '{0}/g2018_eday.csv'.format(base_url)
-general_early_voting_url = '{0}/g2018_ev.csv'.format(base_url)
-general_registration_url = '{0}/g2018_vr.csv'.format(base_url)
-
 
 class Command(BaseCommand):
     help = (
@@ -28,103 +16,85 @@ class Command(BaseCommand):
         'current elections in the database'
     )
 
-    cycle, created = ElectionCycle.objects.get_or_create(name='2018')
+    base_url = ('https://raw.githubusercontent.com/The-Politico/'
+                'election-calendar/master/2018')
+    data = {
+        'primary_calendar': {
+            'url': 'p2018_federal.csv'
+        },
+        'reference': {
+            'url': 'state_reference.csv'
+        },
+        'primary_poll_closings': {
+            'url': 'p2018_federal_eday.csv'
+        },
+        'primary_early_voting': {
+            'url': 'p2018_federal_ev.csv'
+        },
+        'primary_registration': {
+            'url': 'p2018_federal_vr.csv'
+        },
+        'general_poll_closings': {
+            'url': 'g2018_eday.csv'
+        },
+        'general_early_voting': {
+            'url': 'g2018_ev.csv'
+        },
+        'general_registration': {
+            'url': 'g2018_vr.csv'
+        }
+    }
 
-    def handle(self, *args, **options):
-        self.create_spare_elections()
-
-        ref = requests.get(reference_url)
-        reference = csv.DictReader(ref.text.splitlines())
-
-        cal = requests.get(calendar_url)
-        rows = csv.DictReader(cal.text.splitlines())
-
-        p_pc = requests.get(primary_poll_closing_url)
-        primary_poll_closings = csv.DictReader(p_pc.text.splitlines())
-
-        p_ev = requests.get(primary_early_voting_url)
-        primary_early_voting = csv.DictReader(p_ev.text.splitlines())
-
-        p_reg = requests.get(primary_registration_url)
-        primary_registration = csv.DictReader(p_reg.text.splitlines())
-
-        g_pc = requests.get(general_poll_closing_url)
-        general_poll_closings = csv.DictReader(g_pc.text.splitlines())
-
-        g_ev = requests.get(general_early_voting_url)
-        general_early_voting = csv.DictReader(g_ev.text.splitlines())
-
-        g_reg = requests.get(general_registration_url)
-        general_registration = csv.DictReader(g_reg.text.splitlines())
-
-        for row in rows:
-            state = row['state_code']
-
-            for ref_row in reference:
-                if state == ref_row['state_code']:
-                    state_info = ref_row
-                    break
-
-            for pc_row in primary_poll_closings:
-                if state == pc_row['state_code']:
-                    p_poll_closing = pc_row
-                    break
-
-            for ev_row in primary_early_voting:
-                if state == ev_row['state_code']:
-                    p_early_voting = ev_row
-                    break
-
-            for reg_row in primary_registration:
-                if state == reg_row['state_code']:
-                    p_registration = reg_row
-                    break
-
-            for pc_row in general_poll_closings:
-                if state == pc_row['state_code']:
-                    g_poll_closing = pc_row
-                    break
-
-            for ev_row in general_early_voting:
-                if state == ev_row['state_code']:
-                    g_early_voting = ev_row
-                    break
-
-            for reg_row in general_registration:
-                if state == reg_row['state_code']:
-                    g_registration = reg_row
-                    break
-
-            self.create_primaries(
-                row,
-                state_info,
-                p_poll_closing,
-                p_early_voting,
-                p_registration
-            )
-
-            self.create_general(
-                state_info,
-                g_poll_closing,
-                g_early_voting,
-                g_registration
-            )
-
-    def create_primaries(
-        self, row, state_info, poll_closing, early_voting, registration
-    ):
-        if state_info['is_state'] == 'no':
-            return
-
-        division = Division.objects.get(
-            code_components__postal=row['state_code']
+    def add_arguments(self, parser):
+        parser.add_argument(
+            '--cycle',
+            action='store',
+            dest='cycle',
+            default='2018',
+            help='Specify the election cycle you want to query against'
         )
 
-        if poll_closing['polls_close']:
-            time_zones = us.states.lookup(row['state_code']).time_zones
+    def handle(self, *args, **options):
+        self.cycle, created = ElectionCycle.objects.get_or_create(name='2018')
+
+        for key, value in self.data.items():
+            r = requests.get('{0}/{1}'.format(self.base_url, value['url']))
+            reader = csv.DictReader(r.text.splitlines())
+            self.data[key]['csv'] = reader
+
+        for row in list(self.data['reference']['csv']):
+            if row['is_state'] == 'no':
+                continue
+
+            state = row['state_code']
+
+            state_data = {}
+            state_data['code'] = state
+            state_data['name'] = us.states.lookup(row['state_code']).name
+
+            for key, value in self.data.items():
+                for data_row in value['csv']:
+                    if state == data_row['state_code']:
+                        state_data[key] = data_row
+                        break
+
+            self.create_primaries(state_data)
+
+            if state != 'LA':
+                self.create_general(state_data)
+
+        self.create_spare_elections()
+
+    def create_primaries(self, data):
+        division = Division.objects.get(
+            code_components__postal=data['code']
+        )
+
+        if data['primary_poll_closings']['polls_close']:
+            time_zones = us.states.lookup(data['code']).time_zones
             poll_closing_tz = '{0} {1}'.format(
-                row['p2018_federal_election_date'],
-                poll_closing['polls_close'],
+                data['primary_calendar']['p2018_federal_election_date'],
+                data['primary_poll_closings']['polls_close'],
             )
             poll_closing_time = datetime.strptime(
                 poll_closing_tz, '%Y-%m-%d %I:%M:%S %p'
@@ -132,10 +102,10 @@ class Command(BaseCommand):
         else:
             poll_closing_time = None
 
-        if row['p2018_federal_election_date']:
+        if data['primary_calendar']['p2018_federal_election_date']:
             election_day, created = ElectionDay.objects.get_or_create(
                 cycle=self.cycle,
-                date=row['p2018_federal_election_date'],
+                date=data['primary_calendar']['p2018_federal_election_date'],
             )
 
             election_event, created = ElectionEvent.objects.get_or_create(
@@ -143,36 +113,54 @@ class Command(BaseCommand):
                 division=division,
                 label=ElectionEvent.PRIMARIES,
                 dem_primary_type=self.set_null_value(
-                    row.get('p2018_federal_dem_election_type')
+                    data['primary_calendar'].get(
+                        'p2018_federal_dem_election_type'
+                    )
                 ),
                 gop_primary_type=self.set_null_value(
-                    row.get('p2018_federal_rep_election_type')
+                    data['primary_calendar'].get(
+                        'p2018_federal_rep_election_type'
+                    )
                 ),
                 early_vote_start=self.set_null_value(
-                    early_voting.get('p2018_federal_evip_start_date')
+                    data['primary_early_voting'].get(
+                        'p2018_federal_evip_start_date'
+                    )
                 ),
                 early_vote_close=self.set_null_value(
-                    early_voting.get('p2018_federal_evip_close_date')
+                    data['primary_early_voting'].get(
+                        'p2018_federal_evip_close_date'
+                    )
                 ),
                 vote_by_mail_application_deadline=self.set_null_value(
-                    early_voting.get('p2018_federal_vbm_application_deadline')
+                    data['primary_early_voting'].get(
+                        'p2018_federal_vbm_application_deadline'
+                    )
                 ),
                 vote_by_mail_ballot_deadline=self.set_null_value(
-                    early_voting.get('p2018_federal_ballot_return_date')
+                    data['primary_early_voting'].get(
+                        'p2018_federal_ballot_return_date'
+                    )
                 ),
                 online_registration_deadline=self.set_null_value(
-                    registration.get('p2018_federal_online_vr_deadline')
+                    data['primary_registration'].get(
+                        'p2018_federal_online_vr_deadline'
+                    )
                 ),
                 registration_deadline=self.set_null_value(
-                    registration.get('p2018_federal_vr_deadline')
+                    data['primary_registration'].get(
+                        'p2018_federal_vr_deadline'
+                    )
                 ),
                 poll_closing_time=poll_closing_time
             )
 
-        if row['p2018_runoff_federal_election_date']:
+        if data['primary_calendar']['p2018_runoff_federal_election_date']:
             election_day, created = ElectionDay.objects.get_or_create(
                 cycle=self.cycle,
-                date=row['p2018_runoff_federal_election_date']
+                date=data['primary_calendar'][
+                    'p2018_runoff_federal_election_date'
+                ]
             )
 
             election_event, created = ElectionEvent.objects.get_or_create(
@@ -181,20 +169,15 @@ class Command(BaseCommand):
                 label=ElectionEvent.PRIMARIES_RUNOFF
             )
 
-    def create_general(
-        self, state_info, poll_closing, early_voting, registration
-    ):
-        if state_info['is_state'] == 'no' or state_info['state_code'] == 'LA':
-            return
-
+    def create_general(self, data):
         division = Division.objects.get(
-            code_components__postal=state_info['state_code']
+            code_components__postal=data['code']
         )
 
-        if poll_closing['polls_close']:
-            time_zones = us.states.lookup(state_info['state_code']).time_zones
+        if data['general_poll_closings']['polls_close']:
+            time_zones = us.states.lookup(data['code']).time_zones
             poll_closing_tz = '2018-11-06 {0}'.format(
-                poll_closing['polls_close'],
+                data['general_poll_closings']['polls_close'],
             )
             poll_closing_time = datetime.strptime(
                 poll_closing_tz, '%Y-%m-%d %I:%M:%S %p'
@@ -212,22 +195,24 @@ class Command(BaseCommand):
             division=division,
             label=ElectionEvent.GENERAL,
             early_vote_start=self.set_null_value(
-                early_voting.get('g2018_evip_start_date')
+                data['general_early_voting'].get('g2018_evip_start_date')
             ),
             early_vote_close=self.set_null_value(
-                early_voting.get('g2018_evip_close_date')
+                data['general_early_voting'].get('g2018_evip_close_date')
             ),
             vote_by_mail_application_deadline=self.set_null_value(
-                early_voting.get('g2018_vbm_application_deadline')
+                data['general_early_voting'].get(
+                    'g2018_vbm_application_deadline'
+                )
             ),
             vote_by_mail_ballot_deadline=self.set_null_value(
-                early_voting.get('g2018_ballot_return_date')
+                data['general_early_voting'].get('g2018_ballot_return_date')
             ),
             online_registration_deadline=self.set_null_value(
-                registration.get('g2018_online_vr_deadline')
+                data['general_registration'].get('g2018_online_vr_deadline')
             ),
             registration_deadline=self.set_null_value(
-                registration.get('g2018_vr_deadline')
+                data['general_registration'].get('g2018_vr_deadline')
             ),
             poll_closing_time=poll_closing_time
         )
