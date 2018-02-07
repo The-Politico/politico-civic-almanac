@@ -1,6 +1,7 @@
 from django.db import models
 from election.models import ElectionDay
 from geography.models import Division
+from uuslug import uuslug
 
 
 class ElectionEvent(models.Model):
@@ -9,12 +10,18 @@ class ElectionEvent(models.Model):
     PRIMARIES_RUNOFF = 'Primaries Runoff'
     GENERAL = 'General'
     GENERAL_RUNOFF = 'General Runoff'
+    SPECIAL_PRIMARY = 'Special Primary'
+    SPECIAL_RUNOFF = 'Special Runoff'
+    SPECIAL_GENERAL = 'Special General'
 
     LABELS = (
         (PRIMARIES, 'Primaries'),
         (PRIMARIES_RUNOFF, 'Primaries Runoff'),
         (GENERAL, 'General'),
-        (GENERAL_RUNOFF, 'General Runoff')
+        (GENERAL_RUNOFF, 'General Runoff'),
+        (SPECIAL_PRIMARY, 'Special Primary'),
+        (SPECIAL_RUNOFF, 'Special Runoff'),
+        (SPECIAL_GENERAL, 'Special General')
     )
 
     OPEN = 'open'
@@ -31,7 +38,10 @@ class ElectionEvent(models.Model):
         (JUNGLE, 'Jungle')
     )
 
-    label = models.CharField(max_length=50, choices=LABELS)
+    slug = models.SlugField(
+        blank=True, max_length=255, unique=True, editable=False)
+    label = models.CharField(max_length=100)
+    event_type = models.CharField(max_length=50, choices=LABELS)
     dem_primary_type = models.CharField(
         max_length=50,
         choices=PRIMARY_TYPES,
@@ -53,4 +63,18 @@ class ElectionEvent(models.Model):
     poll_closing_time = models.DateTimeField(null=True, blank=True)
 
     def __str__(self):
-        return '{0} {1}'.format(self.division.label, self.label)
+        return self.label
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            slug = '{0}-{1}'.format(self.label, self.election_day.cycle.name)
+
+            self.slug = uuslug(
+                slug,
+                instance=self,
+                max_length=100,
+                separator='-',
+                start_no=2
+            )
+
+        super(ElectionEvent, self).save(*args, **kwargs)

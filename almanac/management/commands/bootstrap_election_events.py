@@ -113,7 +113,11 @@ class Command(BaseCommand):
             election_event, created = ElectionEvent.objects.get_or_create(
                 election_day=election_day,
                 division=division,
-                label=ElectionEvent.PRIMARIES,
+                label='{0} {1}'.format(
+                    division.label,
+                    ElectionEvent.PRIMARIES
+                ),
+                event_type=ElectionEvent.PRIMARIES,
                 dem_primary_type=self.set_null_value(
                     data['primary_calendar'].get(
                         'p2018_federal_dem_election_type'
@@ -168,7 +172,11 @@ class Command(BaseCommand):
             election_event, created = ElectionEvent.objects.get_or_create(
                 election_day=election_day,
                 division=division,
-                label=ElectionEvent.PRIMARIES_RUNOFF
+                label='{0} {1}'.format(
+                    division.label,
+                    ElectionEvent.PRIMARIES_RUNOFF
+                ),
+                event_type=ElectionEvent.PRIMARIES_RUNOFF
             )
 
     def create_general(self, data):
@@ -195,7 +203,11 @@ class Command(BaseCommand):
         election_event, created = ElectionEvent.objects.get_or_create(
             election_day=election_day,
             division=division,
-            label=ElectionEvent.GENERAL,
+            label='{0} {1}'.format(
+                division.label,
+                ElectionEvent.GENERAL
+            ),
+            event_type=ElectionEvent.GENERAL,
             early_vote_start=self.set_null_value(
                 data['general_early_voting'].get('g2018_evip_start_date')
             ),
@@ -236,7 +248,11 @@ class Command(BaseCommand):
         ga_runoff, created = ElectionEvent.objects.get_or_create(
             election_day=ga_runoff_day,
             division=georgia,
-            label=ElectionEvent.GENERAL_RUNOFF
+            label='{0} {1}'.format(
+                georgia.label,
+                ElectionEvent.GENERAL_RUNOFF
+            ),
+            event_type=ElectionEvent.GENERAL_RUNOFF
         )
 
         louisiana = Division.objects.get(code_components__postal='LA')
@@ -249,7 +265,11 @@ class Command(BaseCommand):
         la_general, created = ElectionEvent.objects.get_or_create(
             election_day=la_general_day,
             division=louisiana,
-            label=ElectionEvent.GENERAL,
+            label='{0} {1}'.format(
+                louisiana.label,
+                ElectionEvent.GENERAL
+            ),
+            event_type=ElectionEvent.GENERAL,
             early_vote_start=date(2018, 11, 24),
             early_vote_close=date(2018, 12, 1),
             vote_by_mail_application_deadline=date(2018, 12, 4),
