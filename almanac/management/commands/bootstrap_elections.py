@@ -5,7 +5,7 @@ from almanac.models import ElectionEvent
 from django.core.management.base import BaseCommand
 from election.models import (Election, ElectionType, Race)
 from geography.models import DivisionLevel
-from government.models import Body, Office, Party
+from government.models import Party
 
 
 class Command(BaseCommand):
@@ -19,10 +19,28 @@ class Command(BaseCommand):
     reference_url = ('https://raw.githubusercontent.com/The-Politico/'
                      'election-calendar/master/2018/state_reference.csv')
 
+    def add_arguments(self, parser):
+        parser.add_argument(
+            '--cycle',
+            action='store',
+            dest='cycle',
+            default='2018',
+            help='Specify the election cycle you want to query against'
+        )
+        parser.add_argument(
+            '--senate_class',
+            action='store',
+            dest='senate_class',
+            default='1',
+            help='Specify the Senate class up for election'
+        )
+
     def handle(self, *args, **options):
         cycle_events = ElectionEvent.objects.filter(
-            election_day__cycle__name='2018'
+            election_day__cycle__name=options['cycle']
         )
+
+        self.senate_class = options['senate_class']
 
         for event in cycle_events:
             self.hydrate_elections(event)
@@ -51,7 +69,7 @@ class Command(BaseCommand):
         # determine by class if there is a senate seat
         senators = event.division.offices.filter(body__label='U.S. Senate')
         for senator in senators:
-            if senator.senate_class == '1':
+            if senator.senate_class == self.senate_class:
                 offices.append(senator)
 
         # determine by reference table if there is a governorship
@@ -87,12 +105,7 @@ class Command(BaseCommand):
                 number_of_winners=2,
             )
 
-            election, created = Election.objects.get_or_create(
-                election_type=election_type,
-                race=race,
-                election_day=event.election_day,
-                division=office.division
-            )
+            self.create_election(election_type, event, office, race)
         else:
             election_type, created = ElectionType.objects.get_or_create(
                 label='Party Primary',
@@ -101,12 +114,8 @@ class Command(BaseCommand):
             )
 
             for party in self.parties:
-                election, created = Election.objects.get_or_create(
-                    election_type=election_type,
-                    race=race,
-                    election_day=event.election_day,
-                    division=office.division,
-                    party=party
+                self.create_election(
+                    election_type, event, office, race, party
                 )
 
     def create_general_election(self, event, office, race):
@@ -116,9 +125,17 @@ class Command(BaseCommand):
             slug=ElectionType.GENERAL
         )
 
-        election, created = Election.objects.get_or_create(
-            election_type=election_type,
-            race=race,
-            election_day=event.election_day,
-            division=office.division,
-        )
+        self.create_election(election_type, event, office, race)
+
+    def create_election(self, election_type, event, office, race, party=None):
+        kwargs = {
+            'election_type': election_type,
+            'race': race,
+            'election_day': event.election_day,
+            'division': office.division
+        }
+
+        if party:
+            kwargs['party'] = party
+
+        Election.objects.get_or_create(**kwargs)
