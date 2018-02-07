@@ -14,7 +14,7 @@ class ElectionEvent(models.Model):
     SPECIAL_RUNOFF = 'Special Runoff'
     SPECIAL_GENERAL = 'Special General'
 
-    LABELS = (
+    EVENT_TYPES = (
         (PRIMARIES, 'Primaries'),
         (PRIMARIES_RUNOFF, 'Primaries Runoff'),
         (GENERAL, 'General'),
@@ -41,7 +41,7 @@ class ElectionEvent(models.Model):
     slug = models.SlugField(
         blank=True, max_length=255, unique=True, editable=False)
     label = models.CharField(max_length=100)
-    event_type = models.CharField(max_length=50, choices=LABELS)
+    event_type = models.CharField(max_length=50, choices=EVENT_TYPES)
     dem_primary_type = models.CharField(
         max_length=50,
         choices=PRIMARY_TYPES,
