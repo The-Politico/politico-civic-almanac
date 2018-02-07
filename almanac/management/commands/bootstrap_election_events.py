@@ -55,7 +55,9 @@ class Command(BaseCommand):
         )
 
     def handle(self, *args, **options):
-        self.cycle, created = ElectionCycle.objects.get_or_create(name='2018')
+        self.cycle, created = ElectionCycle.objects.get_or_create(
+            name=options['cycle']
+        )
 
         for key, value in self.data.items():
             r = requests.get('{0}/{1}'.format(self.base_url, value['url']))
