@@ -1,0 +1,37 @@
+@import 'bootstrap';
+
+@import 'breakpoints';
+@import 'mixins';
+@import 'colors/base';
+@import 'colors/diverging';
+@import 'colors/qualitative';
+@import 'colors/sequential';
+@import 'fonts';
+@import 'icons';
+
+@import 'elements';
+@import 'sections';
+@import 'card';
+@import 'key';
+@import 'refer';
+@import 'navigation';
+@import 'header';
+@import 'footer';
+@import 'photos';
+@import 'buttons';
+@import 'ads';
+@import 'comments';
+@import 'share';
+@import 'credits';
+@import 'graphics';
+
+.date-group {
+  padding: 50px 0 50px 0;
+  border-bottom: 1px solid black;
+}
+
+.date {
+  h2 {
+    text-align: left;
+  }
+}

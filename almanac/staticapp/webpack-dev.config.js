@@ -37,9 +37,11 @@ module.exports = port => ({
                   modules: false,
                 },
               ],
-              'react',
               'stage-0',
               'airbnb',
+            ],
+            plugins: [
+              ['transform-react-jsx', { 'pragma': 'h'}],
             ],
           },
         },

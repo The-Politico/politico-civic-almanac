@@ -5,5 +5,7 @@ from .base import BaseViewSet
 
 
 class ElectionEventViewSet(BaseViewSet):
-    queryset = ElectionEvent.objects.all()
+    queryset = ElectionEvent.objects.exclude(
+        event_type=ElectionEvent.GENERAL
+    ).order_by('election_day__date')
     serializer_class = ElectionEventSerializer

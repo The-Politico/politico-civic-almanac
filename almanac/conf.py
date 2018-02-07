@@ -49,7 +49,7 @@ Settings.API_AUTHENTICATION_CLASS = getattr(
 Settings.API_PERMISSION_CLASS = getattr(
     project_settings,
     'ALMANAC_API_PERMISSION_CLASS',
-    'rest_framework.permissions.IsAdminUser'
+    'rest_framework.permissions.IsAuthenticatedOrReadOnly'
 )
 
 settings = Settings

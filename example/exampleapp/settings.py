@@ -99,7 +99,7 @@ STATIC_URL = '/static/'
 #########################
 # almanac settings
 
-ALMANAC_SECRET_KEY = ''
+ALMANAC_SECRET_KEY = 'awefgrshdtfjyuijkl;'
 ALMANAC_AWS_ACCESS_KEY_ID = ''
 ALMANAC_AWS_SECRET_ACCESS_KEY = ''
 ALMANAC_AWS_REGION = ''
