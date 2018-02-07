@@ -40,4 +40,16 @@ Settings.S3_UPLOAD_ROOT = getattr(
     project_settings, 'ALMANAC_S3_UPLOAD_ROOT', 'uploads/almanac')
 
 
+Settings.API_AUTHENTICATION_CLASS = getattr(
+    project_settings,
+    'ALMANAC_API_AUTHENTICATION_CLASS',
+    'rest_framework.authentication.BasicAuthentication'
+)
+
+Settings.API_PERMISSION_CLASS = getattr(
+    project_settings,
+    'ALMANAC_API_PERMISSION_CLASS',
+    'rest_framework.permissions.IsAdminUser'
+)
+
 settings = Settings
