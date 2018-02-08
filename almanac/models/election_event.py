@@ -1,6 +1,7 @@
 from django.db import models
-from election.models import ElectionDay
-from geography.models import Division
+from election.models import ElectionDay, Election
+from geography.models import Division, DivisionLevel
+from government.models import Body
 from uuslug import uuslug
 
 
@@ -78,3 +79,35 @@ class ElectionEvent(models.Model):
             )
 
         super(ElectionEvent, self).save(*args, **kwargs)
+
+    def get_statewide_offices(self):
+        statewide_elections = Election.objects.filter(
+            election_day=self.election_day,
+            division=self.division
+        )
+
+        offices = []
+        for election in statewide_elections:
+            offices.append(election.race.office)
+
+        return set(offices)
+
+    def has_senate_election(self):
+        offices = self.get_statewide_offices()
+        senate = Body.objects.get(
+            label='U.S. Senate'
+        )
+
+        for office in offices:
+            if office.body == senate:
+                return True
+
+        return False
+
+    def has_governor_election(self):
+        offices = self.get_statewide_offices()
+        for office in offices:
+            if office.slug.endswith('governor'):
+                return True
+
+        return False

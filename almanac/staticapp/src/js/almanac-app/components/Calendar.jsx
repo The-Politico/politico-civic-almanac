@@ -59,7 +59,7 @@ class Calendar extends Component {
 
     this.month = this.monthData[props.date.getMonth()];
     this.numberOfWeeks = this.calculateNumberOfWeeks(this.month);
-    this.lastWeekDays = this.calculateLastWeekDays(this.month);
+    this.endingDay = this.calculateEndingDay(this.month);
     this.weekForHighlight = this.calculateWeekForHighlight(this.month, props.date.getDate(), this.numberOfWeeks);
   }
 
@@ -69,7 +69,7 @@ class Calendar extends Component {
     return Math.ceil(remainingDays / 7);
   }
 
-  calculateLastWeekDays(data) {
+  calculateEndingDay(data) {
     const firstWeekDays = 7 - data.startingDay;
     const remainingDays = data.numberOfDays - firstWeekDays;
     return remainingDays % 7;
@@ -108,7 +108,7 @@ class Calendar extends Component {
           highlight={this.weekForHighlight === i + 1 ? this.props.date.getDay() : null}
         />)}
         <CalendarWeek 
-          endingDay={this.lastWeekDays} 
+          endingDay={this.endingDay} 
           highlight={this.weekForHighlight === this.numberOfWeeks ? this.props.date.getDay() : null}
         />
       </div>
