@@ -238,6 +238,24 @@ class Command(BaseCommand):
             return val
 
     def create_spare_elections(self):
+        new_york = Division.objects.get(code_components__postal='NY')
+        ny_state_day, created = ElectionDay.objects.get_or_create(
+            cycle=self.cycle,
+            date=date(2018, 9, 11)
+        )
+        ny_state_primary, created = ElectionEvent.objects.get_or_create(
+            election_day=ny_state_day,
+            division=new_york,
+            label='{0} {1} (state-level offices only)'.format(
+                new_york.label,
+                ElectionEvent.PRIMARIES
+            ),
+            event_type=ElectionEvent.PRIMARIES,
+            vote_by_mail_application_deadline=date(2018, 9, 4),
+            vote_by_mail_ballot_deadline=date(2018, 9, 10),
+            registration_deadline=date(2018, 8, 17)
+        )
+
         georgia = Division.objects.get(code_components__postal='GA')
 
         ga_runoff_day, created = ElectionDay.objects.get_or_create(
@@ -252,7 +270,7 @@ class Command(BaseCommand):
                 georgia.label,
                 ElectionEvent.GENERAL_RUNOFF
             ),
-            event_type=ElectionEvent.GENERAL_RUNOFF
+            event_type=ElectionEvent.GENERAL_RUNOFF,
         )
 
         louisiana = Division.objects.get(code_components__postal='LA')

@@ -2,6 +2,7 @@ import csv
 import requests
 
 from almanac.models import ElectionEvent
+from datetime import date
 from django.core.management.base import BaseCommand
 from election.models import (Election, ElectionType, Race)
 from geography.models import DivisionLevel
@@ -43,7 +44,10 @@ class Command(BaseCommand):
         self.senate_class = options['senate_class']
 
         for event in cycle_events:
-            self.hydrate_elections(event)
+            if event.division.label != 'New York':
+                self.hydrate_elections(event)
+            else:
+                self.handle_new_york(event)
 
     def hydrate_elections(self, event):
         # skip runoffs
@@ -53,48 +57,60 @@ class Command(BaseCommand):
         ]:
             return
 
-        # get all our offices
-        offices = []
+        house_offices = self.get_house_offices(event.division)
+        senate_offices = self.get_senate_offices(event.division)
+        governor_offices = self.get_governor_offices(event.division)
 
-        # start with the house
-        districts = event.division.children.filter(
-            level__name=DivisionLevel.DISTRICT
-        )
-        for district in districts:
-            office = district.offices.get(
-                body__label='U.S. House of Representatives'
-            )
-            offices.append(office)
-
-        # determine by class if there is a senate seat
-        senators = event.division.offices.filter(body__label='U.S. Senate')
-        for senator in senators:
-            if senator.senate_class == self.senate_class:
-                offices.append(senator)
-
-        # determine by reference table if there is a governorship
-        r = requests.get(self.reference_url)
-        reader = csv.DictReader(r.text.splitlines())
-        for row in reader:
-            if event.division.code_components['postal'] == row['state_code']:
-                state_ref = row
-                break
-
-        if state_ref['governor_election_2018'] == 'yes':
-            governor = event.division.offices.get(
-                slug__endswith='governor'
-            )
-            offices.append(governor)
+        offices = house_offices + senate_offices + governor_offices
 
         for office in offices:
             race, created = Race.objects.get_or_create(
                 office=office,
                 cycle=event.election_day.cycle
             )
-            if event.label == ElectionEvent.PRIMARIES:
+            if event.event_type == ElectionEvent.PRIMARIES:
                 self.create_primary_elections(event, office, race)
-            elif event.label == ElectionEvent.GENERAL:
+            elif event.event_type == ElectionEvent.GENERAL:
                 self.create_general_election(event, office, race)
+
+    def get_house_offices(self, division):
+        house_offices = []
+        districts = division.children.filter(
+            level__name=DivisionLevel.DISTRICT
+        )
+        for district in districts:
+            office = district.offices.get(
+                body__label='U.S. House of Representatives'
+            )
+            house_offices.append(office)
+
+        return house_offices
+
+    def get_senate_offices(self, division):
+        senate_offices = []
+        senators = division.offices.filter(body__label='U.S. Senate')
+        for senator in senators:
+            if senator.senate_class == self.senate_class:
+                senate_offices.append(senator)
+
+        return senate_offices
+
+    def get_governor_offices(self, division):
+        governor_offices = []
+        r = requests.get(self.reference_url)
+        reader = csv.DictReader(r.text.splitlines())
+        for row in reader:
+            if division.code_components['postal'] == row['state_code']:
+                state_ref = row
+                break
+
+        if state_ref['governor_election_2018'] == 'yes':
+            governor = division.offices.get(
+                slug__endswith='governor'
+            )
+            governor_offices.append(governor)
+
+        return governor_offices
 
     def create_primary_elections(self, event, office, race):
         if event.dem_primary_type == ElectionEvent.JUNGLE:
@@ -139,3 +155,30 @@ class Command(BaseCommand):
             kwargs['party'] = party
 
         Election.objects.get_or_create(**kwargs)
+
+    def handle_new_york(self, event):
+        if event.election_day.date == date(2018, 9, 11):
+            offices = self.get_governor_offices(event.division)
+            slug = 'state'
+        elif event.election_day.date == date(2018, 6, 26):
+            house_offices = self.get_house_offices(event.division)
+            senate_offices = self.get_senate_offices(event.division)
+            offices = house_offices + senate_offices
+            slug = 'federal'
+        else:
+            house_offices = self.get_house_offices(event.division)
+            senate_offices = self.get_senate_offices(event.division)
+            governor_offices = self.get_governor_offices(event.division)
+            offices = house_offices + senate_offices + governor_offices
+            slug = 'general'
+
+        for office in offices:
+            race, created = Race.objects.get_or_create(
+                office=office,
+                cycle=event.election_day.cycle
+            )
+            print(slug, event.event_type)
+            if event.event_type == ElectionEvent.PRIMARIES:
+                self.create_primary_elections(event, office, race)
+            elif event.event_type == ElectionEvent.GENERAL:
+                self.create_general_election(event, office, race)

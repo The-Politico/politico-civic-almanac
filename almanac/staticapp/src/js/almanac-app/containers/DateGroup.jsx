@@ -5,15 +5,15 @@ import Dateline from 'dateline';
 class DateGroup extends Component {
   constructor(props) {
     super(props);
-    const parsedDate = new Date(this.props.date);
-    this.APDate = Dateline(parsedDate);
+    this.parsedDate = new Date(`${this.props.date} 00:00:00 EST`);
+    this.APDate = Dateline(this.parsedDate).getAPDate();
   }
 
   render() {
     return(
       <div className="date-group row">
         <div className="col-md-3 date">
-          <h2>{this.APDate.getAPDate()}</h2>
+          <h2>{this.APDate}</h2>
         </div>
         <div className="col-md-9 events">
           {this.props.events.map((event) => (
