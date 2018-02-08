@@ -35,3 +35,28 @@
     text-align: left;
   }
 }
+
+.calendar-wrapper {
+  margin-top: 20px;
+  .week {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 5px;
+    .day {
+      width: 12%;
+      padding-bottom: 12%;
+
+      &.visible {
+        background-color: $gray;
+      }
+
+      &.selected {
+        background-color: $politico-red;
+      }
+
+      &:first-child {
+        margin-left: 0;
+      }
+    }
+  }
+}

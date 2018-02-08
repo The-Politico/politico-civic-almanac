@@ -1,5 +1,6 @@
 import { h, Component } from 'preact';
 import Event from '../components/Event';
+import Calendar from '../components/Calendar';
 import Dateline from 'dateline';
 
 class DateGroup extends Component {
@@ -14,6 +15,7 @@ class DateGroup extends Component {
       <div className="date-group row">
         <div className="col-md-3 date">
           <h2>{this.APDate}</h2>
+          <Calendar date={this.parsedDate}/>
         </div>
         <div className="col-md-9 events">
           {this.props.events.map((event) => (
