@@ -12,16 +12,18 @@ class DateGroup extends Component {
 
   render() {
     return(
-      <div className="date-group row">
+      <div className="date-group">
         <div className="container">
-          <div className="col-md-2 date">
-            <h2>{this.APDate}</h2>
-            <Calendar date={this.parsedDate}/>
-          </div>
-          <div className="col-md-10 events">
-            {this.props.events.map((event) => (
-              <Event event={event} />
-            ))}
+          <div className="row">
+            <div className="col-md-3 date">
+              <h2>{this.APDate}</h2>
+              <Calendar date={this.parsedDate}/>
+            </div>
+            <div className="col-md-9 events">
+              {this.props.events.map((event) => (
+                <Event event={event} />
+              ))}
+            </div>
           </div>
         </div>
       </div>

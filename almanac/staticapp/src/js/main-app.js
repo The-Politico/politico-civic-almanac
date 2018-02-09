@@ -18,9 +18,5 @@ fetch('/api/election-events/?format=json', {
   return response.json();
 }).then((data) => {
   const grouped = groupBy(data, 'election_day.date');
-  console.log(grouped);
   init(grouped);
 });
-
-
-if (module.hot) module.hot.accept('./almanac-app/containers/App', init);
