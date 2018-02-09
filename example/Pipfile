@@ -24,6 +24,8 @@ government = {git = "ssh://git@github.com/The-Politico/politico-civic-government
 election = {git = "ssh://git@github.com/The-Politico/politico-civic-election", editable = true}
 almanac = {path = "./..", editable = true}
 pytz = "*"
+celery = "*"
+redis = "*"
 
 
 [dev-packages]

@@ -100,9 +100,12 @@ STATIC_URL = '/static/'
 # almanac settings
 
 ALMANAC_SECRET_KEY = 'awefgrshdtfjyuijkl;'
-ALMANAC_AWS_ACCESS_KEY_ID = ''
-ALMANAC_AWS_SECRET_ACCESS_KEY = ''
-ALMANAC_AWS_REGION = ''
-ALMANAC_AWS_S3_BUCKET = ''
+ALMANAC_AWS_ACCESS_KEY_ID = os.getenv('AWS_ACCESS_KEY_ID', None)
+ALMANAC_AWS_SECRET_ACCESS_KEY = os.getenv('AWS_SECRET_ACCESS_KEY', None)
+ALMANAC_AWS_REGION = 'us-east-1'
+if DEBUG:
+    ALMANAC_AWS_S3_BUCKET = 'staging.interactives.politico.com'
+else:
+    ALMANAC_AWS_S3_BUCKET = 'interactives.politico.com'
 ALMANAC_CLOUDFRONT_ALTERNATE_DOMAIN = ''
 ALMANAC_S3_UPLOAD_ROOT = ''

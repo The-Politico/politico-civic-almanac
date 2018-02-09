@@ -5,7 +5,11 @@ import us
 
 from datetime import date, datetime
 from django.core.management.base import BaseCommand
+from django.db.models import signals
+
 from almanac.models import ElectionEvent
+from almanac.signals import election_event_save
+from almanac.utils.signals import temp_disconnect_signal
 from election.models import ElectionDay, ElectionCycle
 from geography.models import Division
 
@@ -110,56 +114,61 @@ class Command(BaseCommand):
                 date=data['primary_calendar']['p2018_federal_election_date'],
             )
 
-            election_event, created = ElectionEvent.objects.get_or_create(
-                election_day=election_day,
-                division=division,
-                label='{0} {1}'.format(
-                    division.label,
-                    ElectionEvent.PRIMARIES
-                ),
-                event_type=ElectionEvent.PRIMARIES,
-                dem_primary_type=self.set_null_value(
-                    data['primary_calendar'].get(
-                        'p2018_federal_dem_election_type'
-                    )
-                ),
-                gop_primary_type=self.set_null_value(
-                    data['primary_calendar'].get(
-                        'p2018_federal_rep_election_type'
-                    )
-                ),
-                early_vote_start=self.set_null_value(
-                    data['primary_early_voting'].get(
-                        'p2018_federal_evip_start_date'
-                    )
-                ),
-                early_vote_close=self.set_null_value(
-                    data['primary_early_voting'].get(
-                        'p2018_federal_evip_close_date'
-                    )
-                ),
-                vote_by_mail_application_deadline=self.set_null_value(
-                    data['primary_early_voting'].get(
-                        'p2018_federal_vbm_application_deadline'
-                    )
-                ),
-                vote_by_mail_ballot_deadline=self.set_null_value(
-                    data['primary_early_voting'].get(
-                        'p2018_federal_ballot_return_date'
-                    )
-                ),
-                online_registration_deadline=self.set_null_value(
-                    data['primary_registration'].get(
-                        'p2018_federal_online_vr_deadline'
-                    )
-                ),
-                registration_deadline=self.set_null_value(
-                    data['primary_registration'].get(
-                        'p2018_federal_vr_deadline'
-                    )
-                ),
-                poll_closing_time=poll_closing_time
-            )
+            with temp_disconnect_signal(
+                signal=signals.post_save,
+                receiver=election_event_save,
+                sender=ElectionEvent
+            ):
+                ElectionEvent.objects.get_or_create(
+                    election_day=election_day,
+                    division=division,
+                    label='{0} {1}'.format(
+                        division.label,
+                        ElectionEvent.PRIMARIES
+                    ),
+                    event_type=ElectionEvent.PRIMARIES,
+                    dem_primary_type=self.set_null_value(
+                        data['primary_calendar'].get(
+                            'p2018_federal_dem_election_type'
+                        )
+                    ),
+                    gop_primary_type=self.set_null_value(
+                        data['primary_calendar'].get(
+                            'p2018_federal_rep_election_type'
+                        )
+                    ),
+                    early_vote_start=self.set_null_value(
+                        data['primary_early_voting'].get(
+                            'p2018_federal_evip_start_date'
+                        )
+                    ),
+                    early_vote_close=self.set_null_value(
+                        data['primary_early_voting'].get(
+                            'p2018_federal_evip_close_date'
+                        )
+                    ),
+                    vote_by_mail_application_deadline=self.set_null_value(
+                        data['primary_early_voting'].get(
+                            'p2018_federal_vbm_application_deadline'
+                        )
+                    ),
+                    vote_by_mail_ballot_deadline=self.set_null_value(
+                        data['primary_early_voting'].get(
+                            'p2018_federal_ballot_return_date'
+                        )
+                    ),
+                    online_registration_deadline=self.set_null_value(
+                        data['primary_registration'].get(
+                            'p2018_federal_online_vr_deadline'
+                        )
+                    ),
+                    registration_deadline=self.set_null_value(
+                        data['primary_registration'].get(
+                            'p2018_federal_vr_deadline'
+                        )
+                    ),
+                    poll_closing_time=poll_closing_time
+                )
 
         if data['primary_calendar']['p2018_runoff_federal_election_date']:
             election_day, created = ElectionDay.objects.get_or_create(
@@ -168,16 +177,20 @@ class Command(BaseCommand):
                     'p2018_runoff_federal_election_date'
                 ]
             )
-
-            election_event, created = ElectionEvent.objects.get_or_create(
-                election_day=election_day,
-                division=division,
-                label='{0} {1}'.format(
-                    division.label,
-                    ElectionEvent.PRIMARIES_RUNOFF
-                ),
-                event_type=ElectionEvent.PRIMARIES_RUNOFF
-            )
+            with temp_disconnect_signal(
+                signal=signals.post_save,
+                receiver=election_event_save,
+                sender=ElectionEvent
+            ):
+                ElectionEvent.objects.get_or_create(
+                    election_day=election_day,
+                    division=division,
+                    label='{0} {1}'.format(
+                        division.label,
+                        ElectionEvent.PRIMARIES_RUNOFF
+                    ),
+                    event_type=ElectionEvent.PRIMARIES_RUNOFF
+                )
 
     def create_general(self, data):
         division = Division.objects.get(
@@ -200,36 +213,45 @@ class Command(BaseCommand):
             date=date(2018, 11, 6)
         )
 
-        election_event, created = ElectionEvent.objects.get_or_create(
-            election_day=election_day,
-            division=division,
-            label='{0} {1}'.format(
-                division.label,
-                ElectionEvent.GENERAL
-            ),
-            event_type=ElectionEvent.GENERAL,
-            early_vote_start=self.set_null_value(
-                data['general_early_voting'].get('g2018_evip_start_date')
-            ),
-            early_vote_close=self.set_null_value(
-                data['general_early_voting'].get('g2018_evip_close_date')
-            ),
-            vote_by_mail_application_deadline=self.set_null_value(
-                data['general_early_voting'].get(
-                    'g2018_vbm_application_deadline'
-                )
-            ),
-            vote_by_mail_ballot_deadline=self.set_null_value(
-                data['general_early_voting'].get('g2018_ballot_return_date')
-            ),
-            online_registration_deadline=self.set_null_value(
-                data['general_registration'].get('g2018_online_vr_deadline')
-            ),
-            registration_deadline=self.set_null_value(
-                data['general_registration'].get('g2018_vr_deadline')
-            ),
-            poll_closing_time=poll_closing_time
-        )
+        with temp_disconnect_signal(
+            signal=signals.post_save,
+            receiver=election_event_save,
+            sender=ElectionEvent
+        ):
+            ElectionEvent.objects.get_or_create(
+                election_day=election_day,
+                division=division,
+                label='{0} {1}'.format(
+                    division.label,
+                    ElectionEvent.GENERAL
+                ),
+                event_type=ElectionEvent.GENERAL,
+                early_vote_start=self.set_null_value(
+                    data['general_early_voting'].get('g2018_evip_start_date')
+                ),
+                early_vote_close=self.set_null_value(
+                    data['general_early_voting'].get('g2018_evip_close_date')
+                ),
+                vote_by_mail_application_deadline=self.set_null_value(
+                    data['general_early_voting'].get(
+                        'g2018_vbm_application_deadline'
+                    )
+                ),
+                vote_by_mail_ballot_deadline=self.set_null_value(
+                    data['general_early_voting'].get(
+                        'g2018_ballot_return_date'
+                    )
+                ),
+                online_registration_deadline=self.set_null_value(
+                    data['general_registration'].get(
+                        'g2018_online_vr_deadline'
+                    )
+                ),
+                registration_deadline=self.set_null_value(
+                    data['general_registration'].get('g2018_vr_deadline')
+                ),
+                poll_closing_time=poll_closing_time
+            )
 
     def set_null_value(self, val):
         if val == '':
@@ -243,18 +265,23 @@ class Command(BaseCommand):
             cycle=self.cycle,
             date=date(2018, 9, 11)
         )
-        ny_state_primary, created = ElectionEvent.objects.get_or_create(
-            election_day=ny_state_day,
-            division=new_york,
-            label='{0} {1} (state-level offices only)'.format(
-                new_york.label,
-                ElectionEvent.PRIMARIES
-            ),
-            event_type=ElectionEvent.PRIMARIES,
-            vote_by_mail_application_deadline=date(2018, 9, 4),
-            vote_by_mail_ballot_deadline=date(2018, 9, 10),
-            registration_deadline=date(2018, 8, 17)
-        )
+        with temp_disconnect_signal(
+            signal=signals.post_save,
+            receiver=election_event_save,
+            sender=ElectionEvent
+        ):
+            ElectionEvent.objects.get_or_create(
+                election_day=ny_state_day,
+                division=new_york,
+                label='{0} {1} (state-level offices only)'.format(
+                    new_york.label,
+                    ElectionEvent.PRIMARIES
+                ),
+                event_type=ElectionEvent.PRIMARIES,
+                vote_by_mail_application_deadline=date(2018, 9, 4),
+                vote_by_mail_ballot_deadline=date(2018, 9, 10),
+                registration_deadline=date(2018, 8, 17)
+            )
 
         georgia = Division.objects.get(code_components__postal='GA')
 
@@ -263,15 +290,20 @@ class Command(BaseCommand):
             date=date(2019, 1, 8)
         )
 
-        ga_runoff, created = ElectionEvent.objects.get_or_create(
-            election_day=ga_runoff_day,
-            division=georgia,
-            label='{0} {1}'.format(
-                georgia.label,
-                ElectionEvent.GENERAL_RUNOFF
-            ),
-            event_type=ElectionEvent.GENERAL_RUNOFF,
-        )
+        with temp_disconnect_signal(
+            signal=signals.post_save,
+            receiver=election_event_save,
+            sender=ElectionEvent
+        ):
+            ElectionEvent.objects.get_or_create(
+                election_day=ga_runoff_day,
+                division=georgia,
+                label='{0} {1}'.format(
+                    georgia.label,
+                    ElectionEvent.GENERAL_RUNOFF
+                ),
+                event_type=ElectionEvent.GENERAL_RUNOFF,
+            )
 
         louisiana = Division.objects.get(code_components__postal='LA')
 
@@ -280,18 +312,23 @@ class Command(BaseCommand):
             date=date(2018, 12, 8)
         )
 
-        la_general, created = ElectionEvent.objects.get_or_create(
-            election_day=la_general_day,
-            division=louisiana,
-            label='{0} {1}'.format(
-                louisiana.label,
-                ElectionEvent.GENERAL
-            ),
-            event_type=ElectionEvent.GENERAL,
-            early_vote_start=date(2018, 11, 24),
-            early_vote_close=date(2018, 12, 1),
-            vote_by_mail_application_deadline=date(2018, 12, 4),
-            vote_by_mail_ballot_deadline=date(2018, 12, 7),
-            online_registration_deadline=date(2018, 11, 17),
-            registration_deadline=date(2018, 11, 7)
-        )
+        with temp_disconnect_signal(
+            signal=signals.post_save,
+            receiver=election_event_save,
+            sender=ElectionEvent
+        ):
+            ElectionEvent.objects.get_or_create(
+                election_day=la_general_day,
+                division=louisiana,
+                label='{0} {1}'.format(
+                    louisiana.label,
+                    ElectionEvent.GENERAL
+                ),
+                event_type=ElectionEvent.GENERAL,
+                early_vote_start=date(2018, 11, 24),
+                early_vote_close=date(2018, 12, 1),
+                vote_by_mail_application_deadline=date(2018, 12, 4),
+                vote_by_mail_ballot_deadline=date(2018, 12, 7),
+                online_registration_deadline=date(2018, 11, 17),
+                registration_deadline=date(2018, 11, 7)
+            )
