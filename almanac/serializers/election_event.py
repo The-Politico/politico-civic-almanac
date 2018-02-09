@@ -1,7 +1,6 @@
 from almanac.models import ElectionEvent
 from election.serializers import ElectionDaySerializer
 from geography.serializers import DivisionSerializer
-from government.serializers import OfficeSerializer
 from rest_framework import serializers
 
 

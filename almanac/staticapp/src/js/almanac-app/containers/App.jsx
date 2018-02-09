@@ -8,7 +8,7 @@ class App extends Component {
 
   render() {
     return (
-      <div className="dates container">
+      <div className="dates">
         {Object.keys(this.props.data).map((key) => (
           <DateGroup date={key} events={this.props.data[key]} />
         ))}

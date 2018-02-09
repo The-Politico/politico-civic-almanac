@@ -1,15 +1,31 @@
+{% extends 'almanac/base.html' %}
 {%load staticfiles%}
 
-<!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="utf-8">
-    <title></title>
-  </head>
-  <body>
-    <div id="app"></div>
-    <!-- Use me to authenticate basic AJAX requests -->
-    <input id="secret" type="hidden" value="{{secret}}" />
-    <script src="{% static 'almanac/js/main-app.js'%}"></script>
-  </body>
-</html>
+
+{% block content %}
+<header class="center">
+  <div class="share">
+   <a href="" class="icon icon-facebook" target="_blank"></a>
+   <a href="" class="icon icon-twitter" target="_blank"></a>
+   <a class="icon icon-mail" target="_blank"></a>
+  </div>
+  <h1>
+    A Voter&rsquo;s Guide to the </br> 2018 Midterm Elections
+  </h1>
+  <p class="subhead">
+          Short subhead
+  </p>
+  <div class="info">
+      <p>
+          By <span class="byline"><a href="###">Tyler Fisher</a></span> | <time datetime="{{META.timestamp}}">1:00 p.m., Feb. 9, 2018</time></span>
+      </p>
+  </div>
+</header>
+
+<div id="app"></div>
+{% endblock %}
+<!-- Use me to authenticate basic AJAX requests -->
+{% block relative_foot %}
+<input id="secret" type="hidden" value="{{secret}}" />
+<script src="{% static 'almanac/js/main-app.js'%}"></script>
+{% endblock %}

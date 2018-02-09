@@ -8,7 +8,7 @@ class Event extends Component {
   render() {
     return (
       <div className="event-wrapper">
-        <h3>{this.props.event.label}</h3>
+        <h4>{this.props.event.label}</h4>
       </div>
     )
   }
