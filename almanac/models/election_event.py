@@ -4,6 +4,8 @@ from geography.models import Division
 from government.models import Body
 from uuslug import uuslug
 
+from almanac.fields import MarkdownField
+
 
 class ElectionEvent(models.Model):
     """A statewide election event"""
@@ -53,7 +55,7 @@ class ElectionEvent(models.Model):
         choices=PRIMARY_TYPES,
         null=True, blank=True
     )
-    description = models.TextField(null=True, blank=True)
+    description = MarkdownField(null=True, blank=True)
     election_day = models.ForeignKey(ElectionDay, on_delete=models.PROTECT)
     division = models.ForeignKey(Division, on_delete=models.PROTECT)
     early_vote_start = models.DateField(null=True, blank=True)
