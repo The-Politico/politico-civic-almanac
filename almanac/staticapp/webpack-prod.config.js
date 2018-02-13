@@ -10,6 +10,10 @@ const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
 module.exports = {
   resolve: {
     extensions: ['*', '.js', '.jsx', '.json'],
+    alias: {
+      'react': 'preact-compat',
+      'react-dom': 'preact-compat',
+    },
   },
   entry: _.zipObject(
     glob.sync('./src/js/main-*.js*').map(f => path.basename(f, path.extname(f))),
@@ -29,19 +33,19 @@ module.exports = {
           options: {
             presets: [
               [
-                'env',
+                "env", 
                 {
-                  targets: {
-                    browsers: ['last 2 versions'],
+                  "targets": {
+                    "browsers": ["last 2 versions"]
                   },
-                  debug: true,
-                  modules: false,
-                },
+                  "debug": true,
+                  "modules": false,
+                }
               ],
-              'react',
-              'stage-0',
-              'airbnb',
-            ],
+              "react",
+              "stage-0",
+              "airbnb",
+            ]
           },
         },
       },

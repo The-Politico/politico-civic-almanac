@@ -1,7 +1,7 @@
-import { h, Component } from 'preact';
+import React from 'react';
 import Dateline from 'dateline';
 
-class EventTable extends Component {
+class EventTable extends React.Component {
   constructor(props) {
     super(props);
 
@@ -47,8 +47,6 @@ class EventTable extends Component {
           datestr = `${date.date} 00:00:00 EST`;
         }
 
-        console.log(datestr);
-
         const parsed = new Date(datestr);
         this.apDates[date.key] = Dateline(parsed);
       }
@@ -57,74 +55,112 @@ class EventTable extends Component {
 
   render() {
     return (
-      <div className="expando">
-        <div class="row">
-          <div class="column">
-            <div class="top">
-              <h4>Early voting</h4>
-            </div>
-            <div class="bottom">
-              {
-                this.apDates.earlyVoteStart ? (
-                  <div>
-                    <h6>Window</h6>
-                    <p>{this.apDates.earlyVoteStart.getAPDate()} - {this.apDates.earlyVoteClose.getAPDate()}</p>
-                  </div>
-                ) : (<p class="no-data">No early voting</p>)
-              }
-            </div>
-          </div>
-          <div class="column">
-            <div class="top">
-              <h4>Voting by mail</h4>
-            </div>
-            <div class="bottom">
-              {
-                this.apDates.mailApplicationDeadline ? (
-                  <div>
-                    <h6>Register by</h6>
-                    <p>{this.apDates.mailApplicationDeadline.getAPDate()}</p>
-                    <h6>Mail in by</h6>
-                    <p>{this.apDates.mailBallotDeadline.getAPDate()}</p>
-                  </div>
-                ) : (<p class="no-data">No vote by mail</p>)
-              }
-            </div>
-          </div>
-          <div class="column">
-            <div class="top">
+      <div className='expando row'>
+        <div className="row">
+          <div className="column">
+            <div className="top">
+              <div className="icon-wrapper">
+                <img src={`${window.appConfig.images}/signature.svg`} />
+              </div>
               <h4>Registration</h4>
             </div>
-            <div class="bottom">
-              {
-                this.apDates.onlineRegDeadline ? (
-                  <div>
-                    <h6>Online by</h6>
-                    <p>{this.apDates.onlineRegDeadline.getAPDate()}</p>
-                  </div>
-                ) : (<p class="no-data">No online voter registration</p>)
-              }
+            <div className="bottom">
               {
                 this.apDates.regDeadline ? (
                   <div>
                     <h6>In person by</h6>
                     <p>{this.apDates.regDeadline.getAPDate()}</p>
                   </div>
-                ) : (<p class="no-data">No known voter registration deadline</p>)
+                ) : (
+                  <div>
+                    <h6 className="no-data">No known voter registration deadline</h6>
+                  </div>
+                )
+              }
+              {
+                this.apDates.onlineRegDeadline ? (
+                  <div>
+                    <h6>Online by</h6>
+                    <p>{this.apDates.onlineRegDeadline.getAPDate()}</p>
+                  </div>
+                ) : null
               }
             </div>
           </div>
-          <div class="column">
-            <div class="top">
+          <div className="column">
+            <div className="top">
+              <div className="icon-wrapper">
+                <img src={`${window.appConfig.images}/clock.svg`} />
+              </div>
+              <h4>Early voting</h4>
+            </div>
+            <div className="bottom">
+              {
+                this.apDates.earlyVoteStart ? (
+                  <div>
+                    <h6>Start</h6>
+                    <p>{this.apDates.earlyVoteStart.getAPDate()}</p>
+                  </div>
+                ) : (<h6 className="no-data">No early voting</h6>)
+              }
+              {
+                this.apDates.earlyVoteStart ? (
+                  <div>
+                    <h6>End</h6>
+                    <p>{this.apDates.earlyVoteClose.getAPDate()}</p>
+                  </div>
+                ) : null
+              }
+            </div>
+          </div>
+          <div className="column">
+            <div className="top">
+              <div className="icon-wrapper">
+                <img src={`${window.appConfig.images}/envelope.svg`} />
+              </div>
+              <h4>Vote by mail</h4>
+            </div>
+            <div className="bottom">
+              {
+                this.apDates.mailApplicationDeadline ? (
+                  <div>
+                    <h6>Apply by</h6>
+                    <p>{this.apDates.mailApplicationDeadline.getAPDate()}</p>
+                  </div> 
+                ) : (
+                  <div>
+                    <h6 className="no-data">No vote by mail</h6>
+                  </div>
+                )
+              }
+              {
+                this.apDates.mailBallotDeadline ? (
+                  <div>
+                    <h6>Mail in by</h6>
+                    <p>{this.apDates.mailBallotDeadline.getAPDate()}</p>
+                  </div>
+                ) : null
+              }
+            </div>
+          </div>
+          <div className="column">
+            <div className="top">
+              <div className="icon-wrapper">
+                <img src={`${window.appConfig.images}/vote.svg`} />
+              </div>
               <h4>Polls close</h4>
             </div>
-            <div class="bottom">
+            <div className="bottom">
               {this.apDates.pollClosing ? (
                 <div>
                   <h6>At</h6>
-                  <p>{this.apDates.pollClosing.getAPTime()}</p>
+                  <p>{this.apDates.pollClosing.getAPDate() + ', ' + this.apDates.pollClosing.getAPTime()}</p>
                 </div>
-              ) : (<p class="no-data">No known poll closing time</p>)}
+              ) : (
+                <div>
+                  <h6 className="no-data">No known poll closing time</h6>
+                </div>
+              )}
             </div>
           </div>
         </div>

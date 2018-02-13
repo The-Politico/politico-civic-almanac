@@ -6,6 +6,10 @@ const _ = require('lodash');
 module.exports = port => ({
   resolve: {
     extensions: ['*', '.js', '.jsx', '.json'],
+    alias: {
+      'react': 'preact-compat',
+      'react-dom': 'preact-compat',
+    },
   },
   entry: _.zipObject(
     glob.sync('./src/js/main-*.js*').map(f => path.basename(f, path.extname(f))),
@@ -28,21 +32,19 @@ module.exports = port => ({
           options: {
             presets: [
               [
-                'env',
+                "env", 
                 {
-                  targets: {
-                    browsers: ['last 2 versions'],
+                  "targets": {
+                    "browsers": ["last 2 versions"]
                   },
-                  debug: true,
-                  modules: false,
-                },
+                  "debug": true,
+                  "modules": false,
+                }
               ],
-              'stage-0',
-              'airbnb',
-            ],
-            plugins: [
-              ['transform-react-jsx', { 'pragma': 'h'}],
-            ],
+              "react",
+              "stage-0",
+              "airbnb",
+            ]
           },
         },
       },

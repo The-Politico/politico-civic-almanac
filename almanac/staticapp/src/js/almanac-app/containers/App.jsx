@@ -1,7 +1,7 @@
-import { h, Component } from 'preact';
+import React from 'react';
 import DateGroup from './DateGroup';
 
-class App extends Component {
+class App extends React.Component {
   constructor(props) {
     super(props)
   }

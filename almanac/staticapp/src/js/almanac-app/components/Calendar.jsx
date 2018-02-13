@@ -1,12 +1,12 @@
-import { h, Component } from 'preact';
+import React from 'react';
 import CalendarWeek from './CalendarWeek';
 import times from 'lodash/times';
 
-class Calendar extends Component {
+class Calendar extends React.Component {
   constructor(props) {
     super(props);
 
-    this.monthData = [
+    const monthData = [
       {
         startingDay: 2,
         numberOfDays: 31,
@@ -55,12 +55,32 @@ class Calendar extends Component {
         startingDay: 6,
         numberOfDays: 31,
       },
-    ]
+    ];
 
-    this.month = this.monthData[props.date.getMonth()];
-    this.numberOfWeeks = this.calculateNumberOfWeeks(this.month);
-    this.endingDay = this.calculateEndingDay(this.month);
-    this.weekForHighlight = this.calculateWeekForHighlight(this.month, props.date.getDate(), this.numberOfWeeks);
+    this.state = {
+      monthData,
+      month: 0,
+      numberOfWeeks: 0,
+      endingDay: 0,
+      weekForHighlight: 0,
+    }
+
+    this.calculateCalendarData = ::this.calculateCalendarData;
+    this.calculateCalendarData();
+  }
+
+  calculateCalendarData() {
+    const month = this.state.monthData[this.props.date.getMonth()];
+    const numberOfWeeks = this.calculateNumberOfWeeks(month);
+    const endingDay = this.calculateEndingDay(month);
+    const weekForHighlight = this.calculateWeekForHighlight(month, this.props.date.getDate(), numberOfWeeks);
+
+    this.setState({
+      month,
+      numberOfWeeks,
+      endingDay,
+      weekForHighlight,
+    });
   }
 
   calculateNumberOfWeeks(data) {
@@ -101,15 +121,15 @@ class Calendar extends Component {
     return (
       <div className="calendar-wrapper">
         <CalendarWeek 
-          startingDay={this.month.startingDay} 
-          highlight={this.weekForHighlight === 0 ? this.props.date.getDay() : null}
+          startingDay={this.state.month.startingDay} 
+          highlight={this.state.weekForHighlight === 0 ? this.props.date.getDay() : null}
         />
-        {times(this.numberOfWeeks - 1 , i => <CalendarWeek 
-          highlight={this.weekForHighlight === i + 1 ? this.props.date.getDay() : null}
+        {times(this.state.numberOfWeeks - 1 , i => <CalendarWeek 
+          highlight={this.state.weekForHighlight === i + 1 ? this.props.date.getDay() : null}
         />)}
         <CalendarWeek 
-          endingDay={this.endingDay} 
-          highlight={this.weekForHighlight === this.numberOfWeeks ? this.props.date.getDay() : null}
+          endingDay={this.state.endingDay} 
+          highlight={this.state.weekForHighlight === this.state.numberOfWeeks ? this.props.date.getDay() : null}
         />
       </div>
     )

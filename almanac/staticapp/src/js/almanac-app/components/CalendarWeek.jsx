@@ -1,24 +1,26 @@
-import { h, Component } from 'preact';
+import React from 'react';
 
-class CalendarWeek extends Component {
+class CalendarWeek extends React.Component {
   constructor(props) {
     super(props);
+    this.state = {
+      days: [0,1,2,3,4,5,6],
+    }
+  }
 
-    if (!props.startingDay) {
-      this.props.startingDay = 0;
-    }
-    if (!props.endingDay) {
-      this.props.endingDay = 7;
-    }
-    this.days = [0,1,2,3,4,5,6];
+  componentDidMount() {
+    this.setState({
+      startingDay: this.props.startingDay ? this.props.startingDay : 0,
+      endingDay: this.props.endingDay ? this.props.endingDay : 7,
+    });
   }
 
   render() {
     return (
       <div className="week">
-        {this.days.map((day) => (
+        {this.state.days.map((day) => (
           <div className={'day' + (
-            this.props.startingDay <= day && this.props.endingDay > day ? ' visible' : ''
+            this.state.startingDay <= day && this.state.endingDay > day ? ' visible' : ''
           ) + (
             this.props.highlight === day ? ' selected' : ''
           )}></div>
