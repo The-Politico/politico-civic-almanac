@@ -1,0 +1,18 @@
+{% extends 'almanac/home.live.html' %}
+
+{% block relative_head %}
+<link rel="stylesheet" href="./main-app.css">
+{% endblock %}
+
+
+{% block config %}
+<script>
+  window.appConfig = {
+    'data': './data.json',
+    'images': './images',
+  }
+</script>
+{% endblock %}
+{% block relative_foot %}
+<script src="./main-app.js"></script>
+{% endblock %}

@@ -4,7 +4,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
     <meta charset="utf-8">
+    {% block title %}
     <title>2018 Election Calendar: Primary Dates & Schedule by State</title>
+    {% endblock %}
 
     {% include 'almanac/meta.html' %}
     <!-- jQuery -->
@@ -18,6 +20,8 @@
     <script>try{Typekit.load({ async: true });}catch(e){}</script>
     <link rel="stylesheet" type="text/css" href="https://www.politico.com/interactives/cdn/fonts/base-icons/politico-base-icons.min.css">
     <!-- end -->
+    {% block relative_head %}
+    {% endblock %}
   </head>
   <body>
     {%block nav%}
@@ -45,6 +49,9 @@
     {% endblock %}
     {%block content%}
     {%endblock%}
+
+    {% block config %}
+    {% endblock %}
 
     {%block relative_foot%}
     {%endblock%}
