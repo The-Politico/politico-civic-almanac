@@ -1,11 +1,18 @@
 import React from 'react';
 import Sticky from 'react-stickynode';
+import marked from 'marked';
 import EventTable from './EventTable';
 import PrimaryRules from './PrimaryRules';
 
 class Event extends React.Component {
   constructor(props) {
     super(props);
+
+    this.convertDescription = ::this.convertDescription;
+  }
+
+  convertDescription() {
+    return {__html: marked(this.props.event.description)}
   }
 
   render() {
@@ -33,13 +40,17 @@ class Event extends React.Component {
         <div className="col-xs-12">
           <div className="description">
             <h5>What to watch</h5>
-            <p>{this.props.event.description}</p>
+            <div 
+              className="txt"
+              dangerouslySetInnerHTML={this.convertDescription()}
+            >
+            </div>
           </div>
         </div>
       </div>
     ) : null;
 
-    const primaryRules = this.props.event.event_type === 'Primaries' ? (
+    const primaryRules = this.props.event.event_type === 'Primaries' && this.props.event.dem_primary_type ? (
       <div className="row">
         <div className="col-xs-12">
           <div className="primary-rules">

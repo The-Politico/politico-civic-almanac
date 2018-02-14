@@ -27,6 +27,7 @@
     "glob": "latest",
     "gulp": "latest",
     "lodash": "^4.17.5",
+    "marked": "^0.3.12",
     "node-sass": "latest",
     "open": "latest",
     "optimize-css-assets-webpack-plugin": "latest",
