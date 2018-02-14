@@ -62,13 +62,18 @@ class Event extends React.Component {
       <div className="event-wrapper" id={id}>
         <div className="header-row row">
           <div className="col-xs-12">
-            <Sticky 
-              top={55}
-              bottomBoundary={`#${id}`}
-              innerZ={10}
-            >
+            <div className="mobile">
+              <Sticky 
+                top={55}
+                bottomBoundary={`#${id}`}
+                innerZ={10}
+              >
+                {header}
+              </Sticky>
+            </div>
+            <div className="desktop">
               {header}
-            </Sticky>
+            </div>
             <div className="tags">
               {tags.map((tag) => (
                 <span className="tag">{tag}</span>

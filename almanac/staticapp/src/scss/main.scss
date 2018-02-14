@@ -47,7 +47,7 @@
   font-weight: normal;
 }
 
-.date.mobile {
+.mobile {
   display: none;
 }
 
@@ -106,6 +106,10 @@
 
   .header-row {
     position: relative;
+
+    .desktop {
+      display: inline-block;
+    }
   }
 
   .tags {
@@ -276,10 +280,10 @@
     }
   }
 
-  .date.desktop {
+  .desktop {
     display: none;
   }
-  .date.mobile {
+  .mobile {
     span {
       display: none;
     }
