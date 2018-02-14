@@ -254,6 +254,10 @@
 }
 
 @media screen and (max-width: 767px) {
+  .date h2 {
+    font-size: 20px;
+  }
+
   .date-group {
     padding: 0;
     border-bottom: none;
@@ -262,12 +266,27 @@
     padding: 0;
   }
 
+  .header-row {
+    h3 {
+      font-size: 20px;
+    }
+
+    .sticky-outer-wrapper.released, {
+      h3 { display: none; }
+    }
+  }
+
   .date.desktop {
     display: none;
   }
   .date.mobile {
+    span {
+      display: none;
+    }
+
     display: inherit;
     .sticky-outer-wrapper.active .sticky-inner-wrapper {
+      padding-bottom: 50px;
       box-shadow: 1px 3px 4px hsla(0,0%,85%,.16), 0 1px 4px hsla(0,3%,79%,.23);
     }
     .sticky-inner-wrapper {

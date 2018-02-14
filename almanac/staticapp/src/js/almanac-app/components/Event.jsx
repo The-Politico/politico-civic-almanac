@@ -1,4 +1,5 @@
 import React from 'react';
+import Sticky from 'react-stickynode';
 import EventTable from './EventTable';
 import PrimaryRules from './PrimaryRules';
 
@@ -55,11 +56,19 @@ class Event extends React.Component {
       <p>Runoff elections will occur if necessary per race. We will update this section after the initial primaries when we have more information.</p>
     );
 
+    const id = `event-${this.props.event.election_day.date}-${this.props.event.division.slug}`;
+
     return (
-      <div className="event-wrapper">
+      <div className="event-wrapper" id={id}>
         <div className="header-row row">
           <div className="col-xs-12">
-            {header}
+            <Sticky 
+              top={55}
+              bottomBoundary={`#${id}`}
+              innerZ={10}
+            >
+              {header}
+            </Sticky>
             <div className="tags">
               {tags.map((tag) => (
                 <span className="tag">{tag}</span>
