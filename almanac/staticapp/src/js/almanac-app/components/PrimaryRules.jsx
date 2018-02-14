@@ -5,10 +5,10 @@ class PrimaryRules extends React.Component {
     super(props);
 
     this.typeDescs = {
-      open: 'Any registered voter can vote for either party.',
-      'semi-open': 'Any registered voter can vote, but they must request a specific ballot. This information may be collected by election officials.',
-      'semi-closed': 'Voters registered to a particular party and registered voters with no party affiliation can vote.',
-      closed: 'Only voters registered to this party can vote.',
+      open: 'Any registered voter can vote in any party\u2019s primary.',
+      'semi-open': 'Any registered voter can vote for either party, but they must request a specific party\u2019s ballot. This information may be collected by election officials.',
+      'semi-closed': 'Voters registered to a particular party can vote in their party\u2019s primary. Registered voters with no party affiliation can vote in any party\u2019s primary.',
+      closed: 'Only voters registered to a party can vote in that party\u2019s primary.',
       jungle: 'All candidates are put on the same ballot regardless of party, and the top two candidates in vote share advance to the general.',
     }
   }
