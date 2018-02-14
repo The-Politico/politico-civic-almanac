@@ -51,7 +51,9 @@ class Event extends React.Component {
 
     const eventTable = this.props.event.event_type !== 'Primaries Runoff' ? (
       <EventTable event={this.props.event} />
-    ) : null;
+    ) : (
+      <p>Runoff elections will occur if necessary per race. We will update this section after the initial primaries when we have more information.</p>
+    );
 
     return (
       <div className="event-wrapper">
