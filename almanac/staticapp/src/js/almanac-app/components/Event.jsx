@@ -8,6 +8,14 @@ class Event extends React.Component {
   }
 
   render() {
+    const header = window.appConfig.type === 'home' ? (
+      <h3><a href={`../${this.props.event.division.slug}/calendar/index.html`}>
+        {this.props.event.label}
+      </a></h3>
+    ) : (
+      <h3>{this.props.event.label}</h3>
+    )
+
     let tags = [];  
     if (this.props.event.event_type !== 'Primaries Runoff') {
       if (this.props.event.senate_election) {
@@ -49,7 +57,7 @@ class Event extends React.Component {
       <div className="event-wrapper">
         <div className="header-row row">
           <div className="col-xs-12">
-            <h3><a href={`../${this.props.event.division.slug}/calendar/index.html`}>{this.props.event.label}</a></h3>
+            {header}
             <div className="tags">
               {tags.map((tag) => (
                 <span className="tag">{tag}</span>
