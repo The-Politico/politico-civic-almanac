@@ -5,6 +5,7 @@ from almanac.models import ElectionEvent
 from almanac.serializers import ElectionEventSerializer
 from almanac.utils.aws import defaults, get_bucket
 from celery import shared_task
+from geography.models import Division, DivisionLevel
 from rest_framework.renderers import JSONRenderer
 
 logger = logging.getLogger('tasks')
@@ -52,7 +53,34 @@ def serialize_calendar(cycle, division):
     publish_to_aws(state_json_string, state_key)
 
 
+@shared_task(acks_late=True)
+def publish_all_state_data(cycle):
+    states = Division.objects.filter(
+        level__name=DivisionLevel.STATE
+    )
+
+    for state in states:
+        data = []
+        events = ElectionEvent.objects.filter(
+            election_day__cycle__name=cycle,
+            division=state
+        ).order_by('election_day__date', 'division__label')
+        for event in events:
+            serialized = ElectionEventSerializer(event)
+            data.append(serialized.data)
+
+        key = os.path.join(
+            OUTPUT_PATH.format('{0}/{1}'.format(
+                cycle, state.slug
+            )),
+            'data.json'
+        )
+        json_string = JSONRenderer().render(data)
+        publish_to_aws(json_string, key)
+
+
 def publish_to_aws(data, key):
+    print('publishing {0}'.format(key))
     bucket = get_bucket()
 
     bucket.put_object(
