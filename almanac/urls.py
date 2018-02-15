@@ -12,6 +12,6 @@ router.register(
 
 urlpatterns = [
     path('', Home.as_view(), name='almanac-home'),
-    path('state/<state>/', State.as_view(), name='almanac-state'),
+    path('<state>/calendar/index.html', State.as_view(), name='almanac-state'),
     path('api/', include(router.urls)),
 ]
