@@ -20,7 +20,7 @@ class PrimaryRules extends React.Component {
     }
 
     return (
-      <p>{typeDesc}</p>
+      <p className="rules">{typeDesc}</p>
     )
   }
 }
