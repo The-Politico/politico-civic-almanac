@@ -54,20 +54,27 @@
   PROPUBLICA_CONGRESS_API_KEY=apikey
   ```
 
-3. Run migrations from the example app.
+3. Install Python requirements
+
+  ```
+  $ cd example
+  $ pipenv install
+  ```
+
+4. Run migrations from the example app.
 
   ```
   $ cd example
   $ pipenv run python manage.py migrate
   ```
 
-4. Bootstrap your database with initial data.
+5. Bootstrap your database with initial data.
 
   ```
   $ pipenv run python manage.py bootstrap_almanac
   ```
 
-5. Bootstrap the election events
+6. Bootstrap the election events
 
   ```
   $ pipenv run python manage.py bootstrap_election_events
@@ -87,6 +94,7 @@ Developing static assets? Move into the pluggable app's staticapp directory and 
 
   ```
   $ cd almanac/staticapp
+  $ yarn install
   $ gulp
   ```
 
