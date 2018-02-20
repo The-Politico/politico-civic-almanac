@@ -33,6 +33,47 @@
 
 ### Developing
 
+##### Setting up a PostgreSQL database
+
+1. Run the make command to setup a fresh database.
+
+  ```
+  $ make database
+  ```
+
+2. Add a connection URL to the `.env` file.
+
+  ```
+  DATABASE_URL="postgres://localhost:5432/almanac"
+  ```
+
+
+  (note, in order to access bootstrapping, you will need an API key to the Propublica Congress API in your `.env` file as well.)
+
+  ```
+  PROPUBLICA_CONGRESS_API_KEY=apikey
+  ```
+
+3. Run migrations from the example app.
+
+  ```
+  $ cd example
+  $ pipenv run python manage.py migrate
+  ```
+
+4. Bootstrap your database with initial data.
+
+  ```
+  $ pipenv run python manage.py bootstrap_almanac
+  ```
+
+5. Bootstrap the election events
+
+  ```
+  $ pipenv run python manage.py bootstrap_election_events
+  ```
+
+
 ##### Running a development server
 
 Developing python files? Move into example directory and run the development server with pipenv.
@@ -53,25 +94,4 @@ Want to not worry about it? Use the shortcut make command.
 
   ```
   $ make dev
-  ```
-
-##### Setting up a PostgreSQL database
-
-1. Run the make command to setup a fresh database.
-
-  ```
-  $ make database
-  ```
-
-2. Add a connection URL to the `.env` file.
-
-  ```
-  DATABASE_URL="postgres://localhost:5432/almanac"
-  ```
-
-3. Run migrations from the example app.
-
-  ```
-  $ cd example
-  $ pipenv run python manage.py migrate
   ```
