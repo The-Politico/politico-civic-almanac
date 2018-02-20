@@ -25,26 +25,47 @@
 @import 'credits';
 @import 'graphics';
 
+//bootstrap overrides
+
+@media (min-width: 1200px){
+  .container {
+      max-width: 1000px;
+  }
+}
+
+@media(min-width: 768px){
+  .col-sm-3 {
+    width: 18%;
+  }
+  .col-sm-9 {
+    width: 82%;
+  }
+
+}
+
 .date-group {
-  padding: 50px 0 50px 0;
-  border-bottom: 1px solid $dark-gray;
+  padding: 70px 0;
+  border-bottom: 1px solid #e4e4e4;
 
   &:last-child {
     border: none;
   }
 }
 
+
+
 .date h5 {
-  font-size: 14px;
-  font-weight: bold;
-  letter-spacing: 0.05em;
+  font-size: 12px;
+  letter-spacing: 0.3em;
   line-height: 0.8;
-  color: #666;
+  color: #939393;
+  text-align: left;
 }
 
 .date h2 {
-  font-size: 26px;
+  font-size: 25px;
   font-weight: normal;
+  text-align:left;
 }
 
 .mobile {
@@ -53,7 +74,6 @@
 
 .calendar-wrapper {
   width: 100%;
-  margin: 20px auto 0;
   max-width: 100px;
 
   .week {
@@ -70,7 +90,7 @@
       }
 
       &.selected {
-        background-color: $politico-red;
+        background-color: $satan;
       }
 
       &:first-child {
@@ -99,7 +119,7 @@
     vertical-align: middle;
     font-weight: bold;
     a {
-      // text-decoration: underline;
+      text-decoration: underline;
       color: darken(#00979e, 5%);
     }
   }
@@ -113,7 +133,7 @@
   }
 
   .tags {
-    margin-left: 20px;
+    margin-left: 8px;
     display: inline-block;
 
     .tag {
@@ -126,6 +146,7 @@
       font-size: 14px;
       vertical-align: text-bottom;
       letter-spacing: 0.05em;
+      color: #939393;
 
       &:last-child {
         border-right: none;
@@ -157,11 +178,12 @@
     }
   }
   .primary-rules {
-    margin-top: 40px;
+    margin-top: 0px;
   }
 
   .expando {
-    margin-top: 40px;
+    margin-top: 20px;
+    padding: 0 0 0 10px;
 
     .row {
       margin: 0;
@@ -179,8 +201,6 @@
     }
 
     .top {
-      padding: 10px;
-      border-bottom: 1px solid $gray;
 
       .icon-wrapper {
         width: 13%;
@@ -199,15 +219,15 @@
         font-size: 13px;
         text-transform: uppercase;
         letter-spacing: 0.1em;
-        color: $politico-red;
-        font-weight: bold;
+        color: #939393;
         text-align: left;
         display: inline-block;
         margin-left: 8px;
+        font-weight: normal;
       }
     }
     .bottom {
-      padding: 10px;
+      padding: 10px 0 0;
       div {
         &:first-child {
           margin-bottom: 20px;
@@ -228,7 +248,7 @@
       }
       p {
         font-weight: bold;
-        font-size: 20px;
+        font-size: 15px;
       }
     }
   }
@@ -262,6 +282,15 @@
     font-size: 20px;
   }
 
+  .date h5, .date h2{
+    text-align: center;
+  }
+
+  .calendar-wrapper{
+    width: 100px;
+    margin: 0 auto;
+  }
+
   .date-group {
     padding: 0;
     border-bottom: none;
@@ -278,11 +307,13 @@
     .sticky-outer-wrapper.released, {
       h3 { display: none; }
     }
+
   }
 
   .desktop {
     display: none;
   }
+
   .mobile {
     span {
       display: none;
@@ -296,6 +327,8 @@
     .sticky-inner-wrapper {
       padding: 10px 0;
       background-color: white;
+      width: 100%;
+      left: 0;
     }
   }
 
@@ -308,6 +341,10 @@
 
     .header-row {
       margin-bottom: 20px;
+
+      .desktop{
+        display: none;
+      }
     }
 
     h3 {
@@ -318,8 +355,8 @@
     .tags {
       display: block;
       margin: 0 auto;
-      text-align: center; 
-      span { display: inline-block; }    
+      text-align: center;
+      span { display: inline-block; }
     }
 
     .expando {
@@ -345,7 +382,7 @@
         align-items: top;
 
         &:last-child {
-          border-bottom: none;        
+          border-bottom: none;
         }
       }
 
@@ -376,6 +413,7 @@
 
         h6 {
           margin-top: 12px;
+          font-size: .65rem;
         }
 
         h6.no-data {

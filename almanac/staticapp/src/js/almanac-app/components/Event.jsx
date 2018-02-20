@@ -24,7 +24,7 @@ class Event extends React.Component {
       <h3>{this.props.event.label}</h3>
     )
 
-    let tags = [];  
+    let tags = [];
     if (this.props.event.event_type !== 'Primaries Runoff') {
       if (this.props.event.senate_election) {
         tags.push('Senate');
@@ -40,7 +40,7 @@ class Event extends React.Component {
         <div className="col-xs-12">
           <div className="description">
             <h5>What to watch</h5>
-            <div 
+            <div
               className="txt"
               dangerouslySetInnerHTML={this.convertDescription()}
             >
@@ -54,7 +54,6 @@ class Event extends React.Component {
       <div className="row">
         <div className="col-xs-12">
           <div className="primary-rules">
-            <h5>Primary Rules</h5>
             <PrimaryRules event={this.props.event} />
           </div>
         </div>
@@ -74,7 +73,7 @@ class Event extends React.Component {
         <div className="header-row row">
           <div className="col-xs-12">
             <div className="mobile">
-              <Sticky 
+              <Sticky
                 top={55}
                 bottomBoundary={`#${id}`}
                 innerZ={10}
