@@ -41,14 +41,14 @@
   $ make database
   ```
 
-2. Add a connection URL to the `.env` file.
+2. Add a connection URL to the `example/.env` file.
 
   ```
   DATABASE_URL="postgres://localhost:5432/almanac"
   ```
 
 
-  (note, in order to access bootstrapping, you will need an API key to the Propublica Congress API in your `.env` file as well.)
+  (note, in order to access bootstrapping, you will need an API key to the Propublica Congress API in your `example/.env` file as well.)
 
   ```
   PROPUBLICA_CONGRESS_API_KEY=apikey
