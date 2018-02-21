@@ -343,7 +343,7 @@ p{
       padding-bottom: 10px;
       // box-shadow: 1px 3px 4px hsla(0,0%,85%,.16), 0 1px 4px hsla(0,3%,79%,.23);
       box-shadow: 0 3px 16px -4px #e6e6e6;
-      background-color: #bee2e3;
+      background-color: #c9e4e4;
     }
     .sticky-inner-wrapper {
       padding: 0;
@@ -355,7 +355,8 @@ p{
       h3{font-size: 24px;}
 
       h5{
-        padding-top: 10px;
+        padding-top: 16px;
+        color: #282828;
       }
     }
   }
@@ -425,11 +426,17 @@ p{
         }
 
         h4 {
-          text-align: center;
+          text-align: right;
+          margin-right: 20px;
           display: block;
         }
       }
       .bottom {
+
+        p{
+          font-size: 18px;
+          color: #313131;
+        }
         padding: 0;
         div:first-child {
           margin-bottom: 0;
@@ -440,8 +447,8 @@ p{
         }
 
         h6 {
-          margin-top: 12px;
-          font-size: .65rem;
+          margin-top: 7px;
+          font-size: .85rem;
         }
 
         h6.no-data {
