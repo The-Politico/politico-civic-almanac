@@ -7,7 +7,7 @@ import Dateline from 'dateline';
 class DateGroup extends React.Component {
   constructor(props) {
     super(props);
-    this.parsedDate = new Date(`${props.date} 00:05:00`);
+    this.parsedDate = new Date(`${props.date}T12:00:00Z`);
     this.APDate = Dateline(this.parsedDate)
     console.log(this.APDate);
     this.days = [
