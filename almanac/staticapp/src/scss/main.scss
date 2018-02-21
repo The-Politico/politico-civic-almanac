@@ -174,7 +174,15 @@ p{
     line-height: 22px;
 
     &.rules{
-      padding: 0 35px;
+      padding: 0;
+      @media(max-width: 768px){
+        text-align: center;
+        padding-bottom: 10px;
+      }
+
+      @media(max-width: 660px){
+        padding: 0 25px;
+      }
     }
 
     &:first-child {
