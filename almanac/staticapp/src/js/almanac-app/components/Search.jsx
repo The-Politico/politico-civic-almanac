@@ -32,6 +32,7 @@ class Search extends React.Component {
     this.setState({ value });
 
     if (find(this.props.divisions, (s) => s.label === value) || value === '') {
+      console.log('setting search query');
       this.props.setSearchQuery(value);
     }
   }
@@ -47,17 +48,16 @@ class Search extends React.Component {
           wrapperStyle={{ position: 'relative', display: 'inline-block' }}
           onChange={this.onChange}
           onSelect={this.onSelect}
-          renderMenu={children => (
-            <div className="menu">
-              {children}
+          renderMenu={(items, value) => (
+            <div className="menu" children={value === '' ? null : items}>
             </div>
           )}
           shouldItemRender={this.matchStateToTerm}
           renderItem={(item, isHighlighted) => (
             <div
               className={`item ${isHighlighted ? 'item-highlighted' : ''}`}
-              key={item.abbr}
-            >{item.name}</div>
+              key={item.label}
+            >{item.label}</div>
           )}
         />
       </div>
