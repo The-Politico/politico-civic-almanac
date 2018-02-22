@@ -29,7 +29,7 @@ class App extends React.Component {
 
     divisions = sortBy(divisions, (d) => d.label);
     divisions = uniqBy(divisions, (d) => d.label);
-    
+
     this.setState({
       divisions: divisions,
     })
@@ -62,10 +62,12 @@ class App extends React.Component {
     return (
       <div className="wrapper">
         <div className="search">
-          <Search 
-            setSearchQuery={this.setSearchQuery}
-            divisions={this.state.divisions} 
-          />
+          {window.appConfig.type === 'home' ? (
+            <Search 
+              setSearchQuery={this.setSearchQuery}
+              divisions={this.state.divisions} 
+            />
+          ) : null}
         </div>
         <div className="dates">
           {Object.keys(this.state.dateGroups).map((key) => (
