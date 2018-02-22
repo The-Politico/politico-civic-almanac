@@ -44,7 +44,7 @@ class EventTable extends React.Component {
         if (date.date.length > 10) {
           datestr = date.date.slice(0, -1);
         } else {
-          datestr = `${date.date} 00:00:00 EST`;
+          datestr = `${date.date}T12:00:00Z`;
         }
 
         const parsed = new Date(datestr);
