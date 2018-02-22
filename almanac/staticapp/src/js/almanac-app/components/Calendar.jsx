@@ -123,13 +123,16 @@ class Calendar extends React.Component {
         <CalendarWeek 
           startingDay={this.state.month.startingDay} 
           highlight={this.state.weekForHighlight === 0 ? this.props.date.getDay() : null}
+          key={0}
         />
         {times(this.state.numberOfWeeks - 1 , i => <CalendarWeek 
           highlight={this.state.weekForHighlight === i + 1 ? this.props.date.getDay() : null}
+          key={i + 1}
         />)}
         <CalendarWeek 
           endingDay={this.state.endingDay} 
           highlight={this.state.weekForHighlight === this.state.numberOfWeeks ? this.props.date.getDay() : null}
+          key={this.state.numberOfWeeks}
         />
       </div>
     )

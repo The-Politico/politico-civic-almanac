@@ -15,6 +15,13 @@ class CalendarWeek extends React.Component {
     });
   }
 
+  componentWillUpdate() {
+    this.setState({
+      startingDay: this.props.startingDay ? this.props.startingDay : 0,
+      endingDay: this.props.endingDay ? this.props.endingDay : 7,
+    });
+  }
+
   render() {
     return (
       <div className="week">

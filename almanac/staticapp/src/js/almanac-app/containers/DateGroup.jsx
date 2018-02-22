@@ -7,18 +7,25 @@ import Dateline from 'dateline';
 class DateGroup extends React.Component {
   constructor(props) {
     super(props);
-    this.parsedDate = new Date(`${props.date}T12:00:00Z`);
-    this.APDate = Dateline(this.parsedDate)
-    console.log(this.APDate);
-    this.days = [
-      'Sunday', 
-      'Monday', 
-      'Tuesday', 
-      'Wednesday', 
-      'Thursday',
-      'Friday',
-      'Saturday',
-    ];
+
+    this.state = {
+      APDate: Dateline(new Date(`${props.date}T12:00:00Z`)),
+      days: [
+        'Sunday', 
+        'Monday', 
+        'Tuesday', 
+        'Wednesday', 
+        'Thursday',
+        'Friday',
+        'Saturday',
+      ],
+    }
+  }
+
+  componentWillUpdate() {
+    this.setState({
+      APDate: Dateline(new Date(`${this.props.date}T12:00:00Z`))
+    });
   }
 
   render() {
@@ -26,33 +33,26 @@ class DateGroup extends React.Component {
       <div className="date-group">
         <div className="container">
           <div className="row" id={`date-${this.props.date}`}>
-            <div className="col-sm-3">
-                <div className="date desktop">
+            <div className="col-sm-3 desktop">
+                <div className="date">
                   <Sticky 
                     top={20}
                     bottomBoundary={`#date-${this.props.date}`} 
                   >
-                    <h5>{this.days[this.APDate.getDay()]}</h5>
-                    <h2>{this.APDate.getAPDate()}</h2>
-                    <Calendar date={this.parsedDate}/>
+                    <h5>{this.state.days[this.state.APDate.getDay()]}</h5>
+                    <h2>{this.state.APDate.getAPDate()}</h2>
+                    <Calendar date={this.state.APDate}/>
                   </Sticky>
-                </div>
-                <div className="date mobile">
-                  <Sticky 
-                    top={0}
-                    bottomBoundary={`#date-${this.props.date}`} 
-                    innerZ={10}
-                  >
-                    <h5>{this.days[this.APDate.getDay()]}</h5>
-                    <h2>{this.APDate.getAPDate()}</h2>
-                  </Sticky>
-                  <Calendar date={this.parsedDate}/>
                 </div>
             </div>
             <div className="col-sm-9">
               <div className="events">
                 {this.props.events.map((event) => (
-                  <Event event={event} />
+                  <Event 
+                    event={event} 
+                    date={this.state.APDate}
+                    key={event.id}
+                  />
                 ))}
               </div>
             </div>

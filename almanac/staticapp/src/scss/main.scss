@@ -382,6 +382,33 @@ p{
       .desktop{
         display: none;
       }
+
+      .sticky-outer-wrapper .sticky-inner-wrapper.active {
+        padding: 0 15px;
+      }
+      .sticky-inner-wrapper {
+        .col-xs-6, .col-xs-3 {
+          padding-left: 0;
+          padding-right: 0;
+        }
+
+        h2 {
+          font-size: 28px;
+        }
+        h5 {
+          text-transform: none;
+          text-align: center;
+          padding-top: 10px;
+        }
+        .tags {
+          margin: 0;
+          line-height: 0.5;
+          vertical-align: middle;
+          span {
+            border: none;
+          }
+        }
+      }
     }
 
     h3 {

@@ -7,7 +7,6 @@ import PrimaryRules from './PrimaryRules';
 class Event extends React.Component {
   constructor(props) {
     super(props);
-
     this.convertDescription = ::this.convertDescription;
   }
 
@@ -17,9 +16,9 @@ class Event extends React.Component {
 
   render() {
     const header = window.appConfig.type === 'home' ? (
-      <h3><a href={`../${this.props.event.division.slug}/calendar/index.html`}>
-        {this.props.event.label}
-      </a></h3>
+        <h3><a href={`../${this.props.event.division.slug}/calendar/index.html`}>
+          {this.props.event.label}
+        </a></h3>
     ) : (
       <h3>{this.props.event.label}</h3>
     )
@@ -74,20 +73,34 @@ class Event extends React.Component {
           <div className="col-xs-12">
             <div className="mobile">
               <Sticky
-                top={55}
+                top={0}
                 bottomBoundary={`#${id}`}
                 innerZ={10}
-              >
-                {header}
+              > 
+                <div className="row">
+                  <div className="event-date-header col-xs-3">
+                    <h5>{this.props.date.getAPDate().split(' ')[0]}</h5>
+                    <h2>{this.props.date.getAPDate().split(' ')[1]}</h2>
+                  </div>
+                  <div className="col-xs-6">
+                    <h5>{this.props.event.event_type}</h5>
+                    <h2>{this.props.event.division.label}</h2>
+                  </div>
+                  <div className="tags col-xs-3">
+                    {tags.map((tag) => (
+                      <span className="tag">{tag}</span>
+                    ))}
+                  </div>
+                </div>
               </Sticky>
             </div>
             <div className="desktop">
               {header}
-            </div>
-            <div className="tags">
-              {tags.map((tag) => (
-                <span className="tag">{tag}</span>
-              ))}
+              <div className="tags">
+                {tags.map((tag) => (
+                  <span className="tag">{tag}</span>
+                ))}
+              </div>
             </div>
           </div>
         </div>
