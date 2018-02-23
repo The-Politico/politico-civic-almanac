@@ -1,10 +1,11 @@
 import csv
+from datetime import date
+
 import requests
 
 from almanac.models import ElectionEvent
-from datetime import date
 from django.core.management.base import BaseCommand
-from election.models import (Election, ElectionType, Race)
+from election.models import Election, ElectionType, Race
 from geography.models import DivisionLevel
 from government.models import Party
 
@@ -14,8 +15,8 @@ class Command(BaseCommand):
         'Hydrates election models from electionevent objects'
     )
 
-    dem = Party.objects.get(ap_code='dem')
-    gop = Party.objects.get(ap_code='gop')
+    dem = Party.objects.get(ap_code__iexact='dem')
+    gop = Party.objects.get(ap_code__iexact='gop')
     parties = [dem, gop]
     reference_url = ('https://raw.githubusercontent.com/The-Politico/'
                      'election-calendar/master/2018/state_reference.csv')
