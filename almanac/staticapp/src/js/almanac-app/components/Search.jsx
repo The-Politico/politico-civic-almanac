@@ -1,32 +1,63 @@
 import React from 'react';
-import Autocomplete from 'react-autocomplete';
+import Autosuggest from 'react-autosuggest';
 import find from 'lodash/find';
 
 class Search extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      value: ''
+      value: '',
+      suggestions: [],
     }
 
     this.onChange = ::this.onChange;
-    this.onSelect = ::this.onSelect;
     this.updateValue = ::this.updateValue;
+    this.getSuggestions = ::this.getSuggestions;
+    this.onSuggestionsFetchRequested = ::this.onSuggestionsFetchRequested;
+    this.onSuggestionsClearRequested = ::this.onSuggestionsClearRequested;
   }
 
-  matchStateToTerm(state, value) {
+  escapeRegexCharacters(str) {
+    return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  }
+
+  getSuggestions(value) {
+    const escapedValue = this.escapeRegexCharacters(value.trim());
+    
+    if (escapedValue === '') {
+      return [];
+    }
+
+    const regex = new RegExp('^' + escapedValue, 'i');
+
+    return this.props.divisions.filter(division => regex.test(division.label));
+  }
+
+  getSuggestionValue(suggestion) {
+    return suggestion.label;
+  }
+
+  renderSuggestion(suggestion) {
     return (
-      state.label.toLowerCase().indexOf(value.toLowerCase()) !== -1
+      <span>{suggestion.label}</span>
     )
   }
 
   onChange(e, value) {
-    this.updateValue(value);
+    this.updateValue(value.newValue);
   }
 
-  onSelect(value) {
-    this.updateValue(value)
+  onSuggestionsFetchRequested({value}) {
+    this.setState({
+      suggestions: this.getSuggestions(value)
+    });
   }
+
+  onSuggestionsClearRequested() {
+    this.setState({
+      suggestions: [],
+    });
+  };
 
   updateValue(value) {
     this.setState({ value });
@@ -38,27 +69,23 @@ class Search extends React.Component {
   }
 
   render() {
+    const { value, suggestions } = this.state;
+
+    const inputProps = {
+      placeholder: 'Search for a state',
+      value,
+      onChange: this.onChange,
+    };
+
     return (
       <div className="container">
-        <Autocomplete
-          getItemValue={(item) => item.label}
-          items={this.props.divisions}
-          value={this.state.value}
-          inputProps={{ id: 'states-autocomplete' }}
-          wrapperStyle={{ position: 'relative', display: 'inline-block' }}
-          onChange={this.onChange}
-          onSelect={this.onSelect}
-          renderMenu={(items, value) => (
-            <div className="menu" children={value === '' ? null : items}>
-            </div>
-          )}
-          shouldItemRender={this.matchStateToTerm}
-          renderItem={(item, isHighlighted) => (
-            <div
-              className={`item ${isHighlighted ? 'item-highlighted' : ''}`}
-              key={item.label}
-            >{item.label}</div>
-          )}
+        <Autosuggest
+          suggestions={suggestions}
+          onSuggestionsFetchRequested={this.onSuggestionsFetchRequested}
+          onSuggestionsClearRequested={this.onSuggestionsClearRequested}
+          getSuggestionValue={this.getSuggestionValue}
+          renderSuggestion={this.renderSuggestion}
+          inputProps={inputProps}
         />
       </div>
     )

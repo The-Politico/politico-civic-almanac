@@ -36,6 +36,7 @@
     "preact-compat": "^3.18.0",
     "react": "latest",
     "react-autocomplete": "^1.8.1",
+    "react-autosuggest": "^9.3.4",
     "react-dom": "latest",
     "react-stickynode": "^1.4.1",
     "sass-loader": "latest",
