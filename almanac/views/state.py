@@ -15,6 +15,8 @@ class State(TemplateView):
         context['state'] = Division.objects.get(
             slug=kwargs['state']
         )
+        context['statics_path'] = '../../calendar'
+        context['data'] = './data.json'
         return render(request, self.template_name, context)
 
     def get_context_data(self, **kwargs):

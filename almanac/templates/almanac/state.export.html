@@ -1,19 +1,20 @@
 {% extends 'almanac/state.live.html' %}
 
 {% block relative_head %}
-<link rel="stylesheet" href="../../calendar/main-app.css">
+<link rel="stylesheet" href="{{ statics_path }}/main-app.css">
 {% endblock %}
 
 
 {% block config %}
 <script>
   window.appConfig = {
-    'data': './data.json',
-    'images': '../../calendar/images',
+    'data': '{{ data }}',
+    'images': '{{ statics_path }}/images',
     'type': 'state',
   }
 </script>
 {% endblock %}
 {% block relative_foot %}
-<script src="../../calendar/main-app.js"></script>
+
+<script src="{{ statics_path }}/main-app.js"></script>
 {% endblock %}
