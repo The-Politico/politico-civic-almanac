@@ -8,5 +8,8 @@ from .models import ElectionEvent
 @receiver(post_save, sender=ElectionEvent)
 def election_event_save(sender, instance, **kwargs):
     serialize_calendar.delay(
-        instance.election_day.cycle.name, instance.division
+        instance.election_day.cycle.name,
+        instance.division,
+        instance.has_senate_election(),
+        instance.has_house_election()
     )

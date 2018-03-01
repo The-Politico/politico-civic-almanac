@@ -15,8 +15,8 @@ class Event extends React.Component {
   }
 
   render() {
-    const header = window.appConfig.type === 'home' ? (
-        <h3><a href={`../${this.props.event.division.slug}/calendar/index.html`}>
+    const header = window.appConfig.link_path ? (
+        <h3><a href={`${window.appConfig.link_path}${this.props.event.division.slug}/`}>
           {this.props.event.label}
         </a></h3>
     ) : (
@@ -31,7 +31,10 @@ class Event extends React.Component {
       if (this.props.event.governor_election) {
         tags.push('Governor');
       }
-      tags.push('House');
+      console.log(this.props.event);
+      if (this.props.event.house_election) {
+        tags.push('House');      
+      }
     }
 
     const desc = this.props.event.description ? (

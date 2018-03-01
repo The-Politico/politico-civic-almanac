@@ -1,7 +1,7 @@
 from django.urls import include, path
 from rest_framework import routers
 
-from .views import Home, State
+from .views import Home, BodyList, State
 from .viewsets import ElectionEventViewSet
 
 router = routers.DefaultRouter()
@@ -12,6 +12,7 @@ router.register(
 
 urlpatterns = [
     path('', Home.as_view(), name='almanac-home'),
-    path('<state>/calendar/index.html', State.as_view(), name='almanac-state'),
+    path('state/<state>/', State.as_view(), name='almanac-state'),
+    path('body/<body>/', BodyList.as_view(), name='almanac-state'),
     path('api/', include(router.urls)),
 ]

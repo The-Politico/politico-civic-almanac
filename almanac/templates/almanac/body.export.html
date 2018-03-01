@@ -1,4 +1,4 @@
-{% extends 'almanac/home.live.html' %}
+{% extends 'almanac/body.live.html' %}
 
 {% block relative_head %}
 <link rel="stylesheet" href="{{ statics_path }}/main-app.css">
@@ -9,12 +9,13 @@
 <script>
   window.appConfig = {
     'data': '{{ data }}',
-    'link_path': '{{ link_path }}',
     'images': '{{ statics_path }}/images',
-    'type': 'home',
+    'type': 'body',
+    'link_path': '{{ link_path }}'
   }
 </script>
 {% endblock %}
 {% block relative_foot %}
+
 <script src="{{ statics_path }}/main-app.js"></script>
 {% endblock %}

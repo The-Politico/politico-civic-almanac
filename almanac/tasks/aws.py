@@ -10,11 +10,11 @@ from rest_framework.renderers import JSONRenderer
 
 logger = logging.getLogger('tasks')
 
-OUTPUT_PATH = 'election-results/{0}/calendar/'
+OUTPUT_PATH = 'election-results/{0}/schedule/'
 
 
 @shared_task(acks_late=True)
-def serialize_calendar(cycle, division):
+def serialize_calendar(cycle, division, senate, house):
     data = []
 
     events = ElectionEvent.objects.filter(
@@ -51,6 +51,40 @@ def serialize_calendar(cycle, division):
     )
     state_json_string = JSONRenderer().render(state_data)
     publish_to_aws(state_json_string, state_key)
+
+    if senate:
+        senate_data = []
+        senate_events = ElectionEvent.objects.all().order_by(
+            'election_day__date', 'division__label'
+        )
+        senate_events = [e for e in events if e.has_senate_election()]
+        for event in senate_events:
+            serialized = ElectionEventSerializer(event)
+            senate_data.append(serialized.data)
+
+        senate_key = os.path.join(
+            OUTPUT_PATH.format('{0}/{1}'.format(cycle, 'senate')),
+            'data.json'
+        )
+        senate_json_string = JSONRenderer().render(senate_data)
+        publish_to_aws(senate_json_string, senate_key)
+
+    if house:
+        house_data = []
+        house_events = ElectionEvent.objects.all().order_by(
+            'election_day__date', 'division__label'
+        )
+        house_events = [e for e in events if e.has_house_election()]
+        for event in house_events:
+            serialized = ElectionEventSerializer(event)
+            house_data.append(serialized.data)
+
+        house_key = os.path.join(
+            OUTPUT_PATH.format('{0}/{1}'.format(cycle, 'house')),
+            'data.json'
+        )
+        house_json_string = JSONRenderer().render(senate_data)
+        publish_to_aws(house_json_string, house_key)
 
 
 @shared_task(acks_late=True)

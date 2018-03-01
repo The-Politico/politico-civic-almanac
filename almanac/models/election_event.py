@@ -95,6 +95,18 @@ class ElectionEvent(models.Model):
 
         return set(offices)
 
+    def get_district_offices(self):
+        district_elections = Election.objects.filter(
+            election_day=self.election_day,
+            division__parent=self.division
+        )
+
+        offices = []
+        for election in district_elections:
+            offices.append(election.race.office)
+
+        return set(offices)
+
     def has_senate_election(self):
         offices = self.get_statewide_offices()
         senate = Body.objects.get(
@@ -103,6 +115,18 @@ class ElectionEvent(models.Model):
 
         for office in offices:
             if office.body == senate:
+                return True
+
+        return False
+
+    def has_house_election(self):
+        offices = self.get_district_offices()
+        house = Body.objects.get(
+            label='U.S. House of Representatives'
+        )
+
+        for office in offices:
+            if office.body == house:
                 return True
 
         return False

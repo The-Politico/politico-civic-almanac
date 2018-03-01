@@ -18,4 +18,15 @@ class ElectionEventViewSet(BaseViewSet):
         else:
             queryset = queryset.exclude(event_type=ElectionEvent.GENERAL)
 
+        body = self.request.query_params.get('body', None)
+        if body is not None:
+            queryset = queryset.exclude(event_type=ElectionEvent.GENERAL)
+            if body == 'senate':
+                queryset = [q for q in queryset if q.has_senate_election()]
+            elif body == 'house':
+                queryset = [q for q in queryset if q.has_house_election()]
+
+        else:
+            queryset = queryset.exclude(event_type=ElectionEvent.GENERAL)
+
         return queryset

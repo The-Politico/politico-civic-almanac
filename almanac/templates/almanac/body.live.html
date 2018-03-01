@@ -1,6 +1,10 @@
 {% extends 'almanac/base.html' %}
 {%load staticfiles%}
 
+{% block title %}
+<title>2018 {{ body.label }} Election Calendar: Primary Dates & Schedule</title>
+{% endblock title %}
+
 {% block content %}
 <header class="center">
   <div class="share">
@@ -9,22 +13,20 @@
    <a class="icon icon-mail" target="_blank"></a>
   </div>
   <h1>
-    A Voter&rsquo;s Guide to the </br> 2018 Midterm Elections
+    {{ body.label }} Midterm Elections Schedule
   </h1>
   <p class="subhead">
-          Short subhead
+    Short subhead. You can see the whole national calendar <a href="../../calendar/index.html">here</a>.
   </p>
 </header>
-
 <div id="app"></div>
 {% endblock %}
 {% block config %}
 <script>
   window.appConfig = {
-    'data': '/api/election-events/?format=json',
+    'data': '/api/election-events/?format=json&body={{ body.slug }}',
     'images': '/static/almanac/images',
-    'link_path': '{{ link_path }}',
-    'type': 'home',
+    'type': 'body',
   }
 </script>
 {% endblock %}
