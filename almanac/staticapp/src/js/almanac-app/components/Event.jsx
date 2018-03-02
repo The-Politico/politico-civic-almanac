@@ -24,7 +24,7 @@ class Event extends React.Component {
     )
 
     let tags = [];
-    if (this.props.event.event_type !== 'Primaries Runoff') {
+    if (this.props.event.event_type !== 'Primaries Runoff' && window.appConfig.type !== 'body') {
       if (this.props.event.senate_election) {
         tags.push('Senate');
       }

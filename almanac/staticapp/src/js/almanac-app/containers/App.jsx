@@ -62,7 +62,7 @@ class App extends React.Component {
     return (
       <div className="wrapper">
         <div className="search">
-          {window.appConfig.type === 'home' ? (
+          {window.appConfig.type !== 'state' ? (
             <Search 
               setSearchQuery={this.setSearchQuery}
               divisions={this.state.divisions} 

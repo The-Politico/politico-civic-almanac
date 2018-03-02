@@ -155,10 +155,10 @@ class Command(BaseCommand):
 
             context['statics_path'] = '../schedule'
             context['data'] = './schedule/data.json'
-            context['link_path'] = './'
-            
+            context['link_path'] = '../'
+
             placeholder_template_string = render_to_string(
-                'almanac/state.export.html', context
+                'almanac/body.export.html', context
             )
             placeholder_html_key = os.path.join(
                 base_key,

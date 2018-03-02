@@ -31,6 +31,7 @@
     "node-sass": "latest",
     "open": "latest",
     "optimize-css-assets-webpack-plugin": "latest",
+    "politico-style": "git+ssh://git@github.com:The-Politico/politico-style",
     "postcss-loader": "latest",
     "preact": "^8.2.7",
     "preact-compat": "^3.18.0",

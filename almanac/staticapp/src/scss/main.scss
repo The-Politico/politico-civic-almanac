@@ -1,31 +1,36 @@
 @import 'bootstrap';
 
 @import 'breakpoints';
-@import 'mixins';
+// @import 'mixins';
 @import 'colors/base';
-@import 'colors/diverging';
-@import 'colors/qualitative';
-@import 'colors/sequential';
+// @import 'colors/diverging';
+// @import 'colors/qualitative';
+// @import 'colors/sequential';
 @import 'fonts';
 // @import 'icons';
 
 @import 'elements';
-@import 'sections';
-@import 'card';
-@import 'key';
-@import 'refer';
-@import 'navigation';
-@import 'header';
-@import 'footer';
-@import 'photos';
-@import 'buttons';
-@import 'ads';
-@import 'comments';
-@import 'share';
-@import 'credits';
-@import 'graphics';
+// @import 'sections';
+// @import 'card';
+// @import 'key';
+// @import 'refer';
+// @import 'navigation';
+// @import 'header';
+// @import 'footer';
+// @import 'photos';
+// @import 'buttons';
+// @import 'ads';
+// @import 'comments';
+// @import 'share';
+// @import 'credits';
+// @import 'graphics';
+@import '../../node_modules/politico-style/scss/elections/states/main.scss';
 
 //bootstrap overrides
+
+body {
+  padding: 0;
+}
 
 @media (min-width: 1200px){
   .container {
@@ -46,6 +51,9 @@
 p{
   color:#282828;
 }
+#global-header #global-branding span.elex-tag {
+  padding-top: 7px;
+}
 
 .date-group {
   padding: 70px 0;
@@ -58,6 +66,7 @@ p{
 
 .date h5 {
   font-size: 12px;
+  font-family: $din;
   letter-spacing: 0.3em;
   line-height: 0.8;
   color: #939393;
@@ -141,7 +150,7 @@ p{
     .tag {
       position: relative;
       top: 1px;
-      font-family: $franklin;
+      font-family: $din;
       text-transform: uppercase;
       padding: 0px 10px;
       border-right: 1px solid $gray;

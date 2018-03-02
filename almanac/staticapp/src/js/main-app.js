@@ -1,3 +1,4 @@
+import 'politico-style/scss/elections/states/main.scss';
 import '../scss/main.scss';
 import React from 'react';
 import { render } from 'react-dom';
