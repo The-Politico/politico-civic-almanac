@@ -84,6 +84,10 @@ p{
   text-align:left;
 }
 
+h6{
+  font-size: .7rem;
+}
+
 .mobile {
   display: none;
 }
@@ -187,6 +191,7 @@ p{
     font-family: $franklin;
     font-size: 16px;
     line-height: 22px;
+    margin-top: .5rem;
 
     &.rules{
       padding: 0;
@@ -201,7 +206,7 @@ p{
     }
 
     &:first-child {
-      margin-top: 0;
+      margin-top: 5px;
     }
     &:last-child {
       margin-bottom: 0;
@@ -283,6 +288,8 @@ p{
       p {
         font-weight: bold;
         font-size: 15px;
+        line-height: 1;
+        margin-top:4px;
       }
     }
   }
@@ -559,7 +566,7 @@ p{
 
         h6 {
           margin-top: 7px;
-          font-size: .85rem;
+          font-size: .7rem;
         }
 
         h6.no-data {
