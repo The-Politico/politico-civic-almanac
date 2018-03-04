@@ -32,6 +32,14 @@ body {
   padding: 0;
 }
 
+#app{
+  margin-top: 3rem;
+}
+
+#app.state{
+  margin-top: 0;
+}
+
 @media (min-width: 1200px){
   .container {
       max-width: 1000px;
@@ -51,26 +59,32 @@ body {
 h1{
   font-family: $din;
   font-weight: bold;
-  max-width: 900px;
+  max-width: 850px;
   margin-left: auto;
   margin-right:auto;
 }
 
 p{
   color:#282828;
-
-  &.subhed{
-    text-align: center;
-  }
 }
 
 #global-header #global-branding span.elex-tag {
   padding-top: 7px;
 }
 
+#app.state{
+  .date-group:first-of-type{
+    padding-top: 1rem;
+  }
+}
+
 .date-group {
   padding: 70px 0;
   border-bottom: 1px solid #e4e4e4;
+
+  &:first-of-type{
+    margin-top: 0;
+  }
 
   &:last-child {
     border: none;
@@ -379,6 +393,7 @@ h6{
     .icon-wrapper {
       // margin: 0 auto;
       width: 25%;
+      margin: 0px 27px;
     }
 
     h4 {
@@ -468,7 +483,7 @@ h6{
     padding: 20px 0;
 
     .header-row {
-      margin-bottom: 10px;
+      margin-bottom: 0px;
 
       .desktop{
         display: none;
@@ -521,7 +536,17 @@ h6{
 }
 
 @media screen and (max-width: 660px) {
+
+  h1{
+    font-size: 2rem;
+  }
   .event-wrapper {
+
+    p.rules{
+      // text-align: left;
+      padding: 0 10px;
+      margin: 0;
+    }
     .expando {
       border: none;
 
@@ -583,4 +608,17 @@ h6{
       }
     }
   }
+}
+
+@media (max-width: 600px){
+
+#app{
+  margin-top: 1rem;
+}
+#global-header .icon-politico {
+    font-size: 16px;
+}
+#global-header #global-branding span.elex-tag {
+    padding-top: 10px;
+}
 }
