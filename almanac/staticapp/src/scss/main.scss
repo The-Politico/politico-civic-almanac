@@ -51,11 +51,19 @@ body {
 h1{
   font-family: $din;
   font-weight: bold;
+  max-width: 900px;
+  margin-left: auto;
+  margin-right:auto;
 }
 
 p{
   color:#282828;
+
+  &.subhed{
+    text-align: center;
+  }
 }
+
 #global-header #global-branding span.elex-tag {
   padding-top: 7px;
 }
