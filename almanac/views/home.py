@@ -13,6 +13,7 @@ class Home(TemplateView):
         context['statics_path'] = './'
         context['data'] = './data.json'
         context['link_path'] = './'
+        context['ad_tag'] = ''
 
         return render(request, self.template_name, context)
 

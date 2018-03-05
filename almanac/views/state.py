@@ -17,6 +17,7 @@ class State(TemplateView):
         )
         context['statics_path'] = '../../schedule'
         context['data'] = './data.json'
+        context['ad_tag'] = ''
         return render(request, self.template_name, context)
 
     def get_context_data(self, **kwargs):

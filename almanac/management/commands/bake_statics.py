@@ -56,7 +56,8 @@ class Command(BaseCommand):
             'almanac/home.export.html', {
                 'statics_path': './schedule',
                 'data': './schedule/data.json',
-                'link_path': './'
+                'link_path': './',
+                'ad_tag': ''
             }
         )
         placeholder_html_key = os.path.join(
@@ -71,7 +72,8 @@ class Command(BaseCommand):
             'almanac/home.export.html', {
                 'statics_path': '.',
                 'data': './data.json',
-                'link_path': '../'
+                'link_path': '../',
+                'ad_tag': ':Schedule'
             }
         )
         archive_html_key = os.path.join(
@@ -91,7 +93,8 @@ class Command(BaseCommand):
             context = {
                 'state': state,
                 'statics_path': '../../schedule',
-                'data': './data.json'
+                'data': './data.json',
+                'ad_tag': ':Schedule'
             }
             archive_template_string = render_to_string(
                 'almanac/state.export.html', context
@@ -120,6 +123,7 @@ class Command(BaseCommand):
 
             context['statics_path'] = '../schedule'
             context['data'] = './schedule/data.json'
+            context['ad_tag'] = ''
             placeholder_template_string = render_to_string(
                 'almanac/state.export.html', context
             )
@@ -140,7 +144,8 @@ class Command(BaseCommand):
                 'body': body,
                 'statics_path': '../../schedule',
                 'data': './data.json',
-                'link_path': '../'
+                'link_path': '../',
+                'ad_tag': ':Schedule'
             }
             archive_template_string = render_to_string(
                 'almanac/body.export.html', context
@@ -156,6 +161,7 @@ class Command(BaseCommand):
             context['statics_path'] = '../schedule'
             context['data'] = './schedule/data.json'
             context['link_path'] = '../'
+            context['ad_tag'] = ''
 
             placeholder_template_string = render_to_string(
                 'almanac/body.export.html', context

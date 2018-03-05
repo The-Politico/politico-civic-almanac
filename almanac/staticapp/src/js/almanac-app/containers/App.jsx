@@ -59,6 +59,28 @@ class App extends React.Component {
   }
 
   render() {
+    const dates = Object.keys(this.state.dateGroups).map((key, i) => {
+      const group = <DateGroup 
+        key={key}
+        date={key} 
+        events={this.state.dateGroups[key]} 
+      />
+
+      if (i === 2 && window.appConfig.type === 'home') {
+        return (
+          <div>
+            <div class="content-group ad">
+                <p>Advertisement</p>
+                <div class="ad-slot flex horizontal" id="pol-06" ></div>
+            </div>
+            {group}
+          </div>
+        )
+      } else {
+        return group
+      }
+    })
+
     return (
       <div className="wrapper">
         <div className="search">
@@ -70,13 +92,7 @@ class App extends React.Component {
           ) : null}
         </div>
         <div className="dates">
-          {Object.keys(this.state.dateGroups).map((key) => (
-            <DateGroup 
-              key={key}
-              date={key} 
-              events={this.state.dateGroups[key]} 
-            />
-          ))}
+          {dates}
         </div>
       </div>
     )

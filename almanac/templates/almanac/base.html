@@ -54,9 +54,29 @@
           </nav>
         </div>
       </nav>
+
+      <div class="content-group ad">
+        <p>Advertisement</p>
+          <div class="ad-slot flex horizontal" id="pol-01" ></div>
+      </div>
     {% endblock %}
     {%block content%}
     {%endblock%}
+
+    {% block credits %}
+    <section class="credits sans app">
+      <p>By <span class="byline"><a href="https://twitter.com/aalex413">Ayanna Alexander</a></span>, <span class="byline"><a href="https://twitter.com/tylrfishr">Tyler Fisher</a></span>, <span class="byline"><a href="https://twitter.com/JonRMcClure">Jon McClure</a></span> and
+      <span class="byline"><a href="https://twitter.com/mazet">Lily Mihalik</a>.</span> Icons courtsey of The Noun Project: Amy Morgan, Hea Poh Lin, Ralf Schmitzer, and Gilad Fried, IL. Data is based on <a href="https://github.com/democrats/election-calendar">open data</a> released by the Democratic National Committee.</p>
+      <br/>
+    </section>
+    {% endblock %}
+
+    {% block supercube %}
+    <div class="content-group ad">
+        <p>Advertisement</p>
+        <div class="ad-slot flex horizontal" id="pol-07" ></div>
+    </div>
+    {% endblock %}
 
     {% block config %}
     {% endblock %}
@@ -133,6 +153,7 @@
          </footer>
      {%endblock%}
 
+     {% block ad %}
      <script type="text/javascript">
      (function(a,b,c,d){
      a='//tags.tiqcdn.com/utag/politico/main/prod/utag.js';
@@ -142,16 +163,16 @@
      a=b.getElementsByTagName(c)[0];a.parentNode.insertBefore(d,a)
      })();
      var utag_data = {
-      "page_level_1":"interactives",
-      "free_paid_content":"free",
-      "site_section":"elections",
-      "ad_unit_section":"elections-2017",
-      "page_type":"election results",
-      "content_author":"Tyler Fisher|Sarah Frostenson"|"Jeremy C.F. Lin|Jon McClure|Lily Mihalik ",
-      "content_byline":"By Tyler Fisher, Sarah Frostenson, Jeremy C.F. Lin, Jon McClure and Lily Mihalik ",
-      "site_domain":"www.politico.com",
-      "internal_site_id":"politico",
-      "page_name":"{{year}} {{state}} Election Results: Live map, real-time voting updates",
+       "page_level_1":"interactives",
+       "free_paid_content":"free",
+       "ad_unit_section":"2018-election",
+       "site_section":"elections",
+       "page_type":"election results",
+       "site_domain":"www.politico.com",
+       "internal_site_id":"politico",
+       "page_name":"2018 Election:Results",
+       "content_author":"Tyler Fisher|Sarah Frostenson|Jeremy C.F. Lin|Jon McClure|Lily Mihalik ",
+       "content_byline":"By Tyler Fisher, Sarah Frostenson, Jeremy C.F. Lin, Jon McClure and Lily Mihalik ",
      };
      window.$('.icon-facebook').click(function(e){
         e.preventDefault();
@@ -165,6 +186,7 @@
       window.open('https://twitter.com/home?status=' + status);
     });
      </script>
+     {% endblock %}
 
      <script>
       // Responsive ads script
