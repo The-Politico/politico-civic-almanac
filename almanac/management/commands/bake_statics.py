@@ -90,6 +90,9 @@ class Command(BaseCommand):
         )
 
         for state in states:
+            if state.label == 'Texas':
+                continue
+
             context = {
                 'state': state,
                 'statics_path': '../../schedule',
