@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
     <meta charset="utf-8">
     {% block title %}
-    <title>Midterm 2018 Election Schedule: Primary Dates & Calendar</title>
+    <title>Midterm 2018 Election Results & Schedule: Primary Dates & Calendar</title>
     {% endblock %}
 
     {% block page-meta %}
@@ -13,13 +13,23 @@
     <meta property="og:url" content="https://www.politico.com/election-results/2018/" />
     <link rel="canonical" href="https://www.politico.com/election-results/2018/" />
     <!-- Project title -->
-    <meta property="twitter:title" content="Midterm 2018 Election Schedule: Primary Dates & Calendar" />
-    <meta property="og:title" content="Midterm 2018 Election Schedule: Primary Dates & Calendar" />
+    <meta property="twitter:title" content="Midterm 2018 Election Results & Schedule: Primary Dates & Calendar" />
+    <meta property="og:title" content="Midterm 2018 Election Results & Schedule: Primary Dates & Calendar" />
     <!-- Project description -->
     <meta property="twitter:description" content="Updated calendar of midterm election dates, early voting and registration deadlines. POLITICO's coverage of the 2018 midterm races for Senate, House & state governors." />
     <meta property="og:description" content="Updated calendar of midterm election dates, early voting and registration deadlines. POLITICO's coverage of the 2018 midterm races for Senate, House & state governors." />
     <meta name="description" content="Updated calendar of midterm election dates, early voting and registration deadlines. POLITICO's coverage of the 2018 midterm races for Senate, House & state governors." />
     {% endblock %}
+
+    <!-- Share image -->
+    {%block meta-image%}
+    <meta property="twitter:image" content="https://www.politico.com/election-results/cdn/img/2018/share/home/share.jpg" />
+    <meta property="twitter:image:alt" content="Live election results and maps." />
+    <meta property="og:image" content="https://www.politico.com/election-results/cdn/img/2018/share/home/share.jpg" />
+    <meta property="og:image:type" content="image/jpeg" />
+    <meta property="og:image:width" content="600" />
+    <meta property="og:image:height" content="300" />
+    {%endblock%}
 
     {% include 'almanac/meta.html' %}
     <!-- jQuery -->

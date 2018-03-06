@@ -2,25 +2,25 @@
 {%load staticfiles%}
 
 {% block title %}
-<title>{{ state.label }} 2018 Election Schedule: Primary Dates & Calendar</title>{% endblock title %}
+<title>{{ state.label }} 2018 Election Results & Schedule: Primary Dates & Calendar</title>{% endblock title %}
 
 {% block page-meta %}
 <!-- Site URL -->
 <meta property="og:url" content="https://www.politico.com/election-results/2018/{{ state.slug }}/" />
 <link rel="canonical" href="https://www.politico.com/election-results/2018/{{ state.slug }}/" />
 <!-- Project title -->
-<meta property="twitter:title" content="{{ state.label }} 2018 Election Schedule: Primary Dates & Calendar" />
-<meta property="og:title" content="{{ state.label }} 2018 Election Schedule: Primary Dates & Calendar" />
+<meta property="twitter:title" content="{{ state.label }} 2018 Election Results & Schedule: Primary Dates & Calendar" />
+<meta property="og:title" content="{{ state.label }} 2018 Election Results & Schedule: Primary Dates & Calendar" />
 <!-- Project description -->
 <meta property="twitter:description" content="Updated calendar of {{ state.label }} election dates, early voting and registration deadlines. POLITICO's coverage of the 2018 midterm races for Senate, House & state governors." />
 <meta property="og:description" content="Updated calendar of {{ state.label }} election dates, early voting and registration deadlines. POLITICO's coverage of the 2018 midterm races for Senate, House & state governors." />
 <meta name="description" content="Updated calendar of {{ state.label }} election dates, early voting and registration deadlines. POLITICO's coverage of the 2018 midterm races for Senate, House & state governors." />
 {% endblock %}
 
-{%block meta-image%}
-<meta property="twitter:image" content="https://www.politico.com/election-results/cdn/img/2018/share/{{state.slug}}/share.jpg" />
+{%block meta-image %}
+<meta property="twitter:image" content="https://www.politico.com/election-results/cdn/img/2018/share/{{state.code_components.postal|lower}}/share.jpg" />
 <meta property="twitter:image:alt" content="Live election results and maps." />
-<meta property="og:image" content="https://www.politico.com/election-results/cdn/img/2018/share/{{state.slug}}/share.jpg" />
+<meta property="og:image" content="https://www.politico.com/election-results/cdn/img/2018/share/{{state.code_components.postal|lower}}/share.jpg" />
 <meta property="og:image:type" content="image/jpeg" />
 <meta property="og:image:width" content="600" />
 <meta property="og:image:height" content="300" />

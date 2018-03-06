@@ -90,8 +90,8 @@ class Command(BaseCommand):
         )
 
         for state in states:
-            if state.label == 'Texas':
-                continue
+            # if state.label == 'Texas':
+            #     continue
 
             context = {
                 'state': state,
@@ -117,7 +117,7 @@ class Command(BaseCommand):
             event_passed = False
             now = date.today()
             for event in events:
-                if event.election_day.date < now:
+                if event.election_day.date <= now:
                     event_passed = True
 
             if event_passed:
