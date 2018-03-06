@@ -31,7 +31,6 @@ class Event extends React.Component {
       if (this.props.event.governor_election) {
         tags.push('Governor');
       }
-      console.log(this.props.event);
       if (this.props.event.house_election) {
         tags.push('House');      
       }

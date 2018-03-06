@@ -15,6 +15,7 @@ class Search extends React.Component {
     this.getSuggestions = ::this.getSuggestions;
     this.onSuggestionsFetchRequested = ::this.onSuggestionsFetchRequested;
     this.onSuggestionsClearRequested = ::this.onSuggestionsClearRequested;
+    this.onClearClicked = ::this.onClearClicked;
   }
 
   escapeRegexCharacters(str) {
@@ -63,9 +64,14 @@ class Search extends React.Component {
     this.setState({ value });
 
     if (find(this.props.divisions, (s) => s.label === value) || value === '') {
-      console.log('setting search query');
       this.props.setSearchQuery(value);
     }
+  }
+
+  onClearClicked(e) {
+    this.onSuggestionsClearRequested();
+    this.onChange(null, {newValue: '', method: 'type'});
+    this.props.setSearchQuery('');
   }
 
   render() {
@@ -79,14 +85,22 @@ class Search extends React.Component {
 
     return (
       <div className="container">
-        <Autosuggest
-          suggestions={suggestions}
-          onSuggestionsFetchRequested={this.onSuggestionsFetchRequested}
-          onSuggestionsClearRequested={this.onSuggestionsClearRequested}
-          getSuggestionValue={this.getSuggestionValue}
-          renderSuggestion={this.renderSuggestion}
-          inputProps={inputProps}
-        />
+        <div className="search-wrapper">
+          <Autosuggest
+            suggestions={suggestions}
+            onSuggestionsFetchRequested={this.onSuggestionsFetchRequested}
+            onSuggestionsClearRequested={this.onSuggestionsClearRequested}
+            getSuggestionValue={this.getSuggestionValue}
+            renderSuggestion={this.renderSuggestion}
+            inputProps={inputProps}
+          />
+          <div 
+            className="clear-suggestions" 
+            onClick={this.onClearClicked}
+          >
+            &times;
+          </div>
+        </div>
       </div>
     )
   }

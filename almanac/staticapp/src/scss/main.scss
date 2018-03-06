@@ -324,10 +324,29 @@ h6{
   }
 }
 
+.search-wrapper {
+  width: 100%;
+  text-align: center;
+}
+
 .react-autosuggest__container {
   position: relative;
+  left: 17.5px;
   max-width: 300px;
   margin: 0 auto;
+  border-bottom: 2px solid gray;
+  display: inline-block;
+}
+
+.clear-suggestions {
+  position: relative;
+  left: -17.5px;
+  display: inline-block;
+  font-family: $franklin;
+  font-size: 30px;
+  top: 4px;
+  cursor: pointer;
+  padding: 10px;
 }
 
 .react-autosuggest__input {
@@ -337,8 +356,9 @@ h6{
   font-family: $franklin;
   font-weight: 300;
   font-size: 20px;
-  border: 1px solid #aaa;
-  border-radius: 4px;
+  background-color: #f0f0f0;
+  border: none;
+  // border-radius: 4px;
 }
 
 .react-autosuggest__input--focused {
@@ -358,9 +378,10 @@ h6{
   display: block;
   position: absolute;
   top: 60px;
-  width: 280px;
+  width: 300px;
   margin: 0 auto;
-  border: 1px solid #aaa;
+  border: 1px solid #f0f0f0;
+  border-top: none;
   background-color: #fff;
   font-family: $franklin;
   font-weight: 300;
