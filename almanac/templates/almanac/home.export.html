@@ -1,7 +1,7 @@
 {% extends 'almanac/home.live.html' %}
 
 {% block relative_head %}
-<link rel="stylesheet" href="{{ statics_path }}/main-app.css">
+<link rel="stylesheet" href="{{ statics_path }}/main-app-{{hash}}.css">
 {% endblock %}
 
 
@@ -16,7 +16,8 @@
 </script>
 {% endblock %}
 {% block relative_foot %}
-<script src="{{ statics_path }}/main-app.js"></script>
+<script src="{{ statics_path }}/main-app-{{hash}}.js"></script>
+
 {% endblock %}
 
  {% block ad %}

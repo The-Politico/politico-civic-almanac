@@ -1,4 +1,5 @@
 import os
+import uuid
 
 from datetime import date
 from django.core.management.base import BaseCommand
@@ -28,7 +29,7 @@ class Command(BaseCommand):
             key = os.path.join(
                 base_key,
                 'schedule',
-                '{}{}'.format(filename, ext)
+                '{}-{}{}'.format(filename, self.hash, ext)
             )
             self.upload_file(file, key, 'text/javascript')
 
@@ -37,7 +38,7 @@ class Command(BaseCommand):
             key = os.path.join(
                 base_key,
                 'schedule',
-                '{}{}'.format(filename, ext)
+                '{}-{}{}'.format(filename, self.hash, ext)
             )
             self.upload_file(file, key, 'text/css')
 
@@ -57,7 +58,8 @@ class Command(BaseCommand):
                 'statics_path': './schedule',
                 'data': './schedule/data.json',
                 'link_path': './',
-                'ad_tag': ''
+                'ad_tag': '',
+                'hash': self.hash
             }
         )
         placeholder_html_key = os.path.join(
@@ -73,7 +75,8 @@ class Command(BaseCommand):
                 'statics_path': '.',
                 'data': './data.json',
                 'link_path': '../',
-                'ad_tag': ':Schedule'
+                'ad_tag': ':Schedule',
+                'hash': self.hash
             }
         )
         archive_html_key = os.path.join(
@@ -97,7 +100,8 @@ class Command(BaseCommand):
                 'state': state,
                 'statics_path': '../../schedule',
                 'data': './data.json',
-                'ad_tag': ':Schedule'
+                'ad_tag': ':Schedule',
+                'hash': self.hash
             }
             archive_template_string = render_to_string(
                 'almanac/state.export.html', context
@@ -148,7 +152,8 @@ class Command(BaseCommand):
                 'statics_path': '../../schedule',
                 'data': './data.json',
                 'link_path': '../',
-                'ad_tag': ':Schedule'
+                'ad_tag': ':Schedule',
+                'hash': self.hash
             }
             archive_template_string = render_to_string(
                 'almanac/body.export.html', context
@@ -199,6 +204,7 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         print('> Publishing statics')
+        self.hash = uuid.uuid4().hex[:10]
         self.bucket = get_bucket()
 
         base_key = 'election-results/2018/'
