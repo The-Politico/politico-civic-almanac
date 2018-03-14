@@ -1,10 +1,10 @@
 from setuptools import find_packages, setup
 
 setup(
-    name='django-politico-civic-almanac',
-    version='0.0.0-alpha',
+    name='politico-civic-almanac',
+    version='0.1.0',
     description='',
-    url='https://github.com/The-Politico/django-politico-civic-almanac',
+    url='https://github.com/The-Politico/politico-civic-almanac',
     author='POLITICO interactive news',
     author_email='interactives@politico.com',
     license='MIT',
@@ -25,7 +25,19 @@ setup(
 
     packages=find_packages(exclude=['docs', 'tests', 'example']),
 
-    install_requires=[],
+    install_requires=[
+        'django',
+        'djangorestframework',
+        'dj-database-url',
+        'psycopg2',
+        'politico-civic-entity',
+        'politico-civic-geography',
+        'politico-civic-government',
+        'politico-civic-election',
+        'pytz',
+        'celery',
+        'redis',
+    ],
 
     extras_require={
         'test': ['pytest'],
