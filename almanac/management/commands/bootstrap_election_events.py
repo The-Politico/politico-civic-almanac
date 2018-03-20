@@ -263,7 +263,7 @@ class Command(BaseCommand):
         new_york = Division.objects.get(code_components__postal='NY')
         ny_state_day, created = ElectionDay.objects.get_or_create(
             cycle=self.cycle,
-            date=date(2018, 9, 11)
+            date=date(2018, 9, 13)
         )
         with temp_disconnect_signal(
             signal=signals.post_save,
@@ -278,9 +278,9 @@ class Command(BaseCommand):
                     ElectionEvent.PRIMARIES
                 ),
                 event_type=ElectionEvent.PRIMARIES,
-                vote_by_mail_application_deadline=date(2018, 9, 4),
-                vote_by_mail_ballot_deadline=date(2018, 9, 10),
-                registration_deadline=date(2018, 8, 17)
+                vote_by_mail_application_deadline=date(2018, 9, 6),
+                vote_by_mail_ballot_deadline=date(2018, 9, 12),
+                registration_deadline=date(2018, 8, 19)
             )
 
         georgia = Division.objects.get(code_components__postal='GA')
