@@ -1,5 +1,6 @@
 import React from 'react';
 import Dateline from 'dateline';
+import { DateTime } from 'luxon';
 
 class EventTable extends React.Component {
   constructor(props) {
@@ -43,12 +44,13 @@ class EventTable extends React.Component {
         let datestr = '';
         if (date.date.length > 10) {
           datestr = date.date.slice(0, -1);
+          console.log(datestr);
         } else {
           datestr = `${date.date}T12:00:00Z`;
         }
 
-        const parsed = new Date(datestr);
-        this.apDates[date.key] = Dateline(parsed);
+        const parsed = DateTime.fromISO(datestr);
+        this.apDates[date.key] = Dateline(parsed.toJSDate());
       }
     });
   }

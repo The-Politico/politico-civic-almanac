@@ -73,7 +73,11 @@ module.exports = {
       filename: getPath => getPath('css/[name].css').replace('css/js', 'css'),
       allChunks: true,
     }),
-    new OptimizeCssAssetsPlugin(),
+    new OptimizeCssAssetsPlugin({
+      cssProcessorOptions: {
+        zindex: false
+      }
+    }),
     new webpack.optimize.ModuleConcatenationPlugin(),
     new UglifyJSPlugin(),
     new webpack.ProvidePlugin({
