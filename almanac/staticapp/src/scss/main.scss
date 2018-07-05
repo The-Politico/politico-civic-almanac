@@ -215,7 +215,7 @@ h6{
   }
   p {
     max-width: 100%;
-    font-family: $franklin;
+    font-family: $din;
     font-size: 16px;
     line-height: 22px;
     margin-top: .5rem;
@@ -342,7 +342,7 @@ h6{
   position: relative;
   left: -17.5px;
   display: inline-block;
-  font-family: $franklin;
+  font-family: $din;
   font-size: 30px;
   top: 4px;
   cursor: pointer;
@@ -353,7 +353,7 @@ h6{
   width: 300px;
   height: 60px;
   padding: 10px 20px;
-  font-family: $franklin;
+  font-family: $din;
   font-weight: 300;
   font-size: 20px;
   background-color: #f0f0f0;
@@ -383,7 +383,7 @@ h6{
   border: 1px solid #f0f0f0;
   border-top: none;
   background-color: #fff;
-  font-family: $franklin;
+  font-family: $din;
   font-weight: 300;
   font-size: 16px;
   border-bottom-left-radius: 4px;
@@ -502,6 +502,10 @@ h6{
         color: #282828;
       }
 
+      h2 a {
+        text-decoration: underline;
+        color: darken(#00979e, 5%);
+      }
 
     }
   }

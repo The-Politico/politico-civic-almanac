@@ -19,6 +19,10 @@ class PrimaryRules extends React.Component {
       typeDesc = this.typeDescs[this.props.event.dem_primary_type];
     }
 
+    if (this.props.event.division.label === 'Louisiana' && this.props.event.dem_primary_type === 'jungle') {
+      typeDesc += ' If a candidate wins a majority of the vote, that candidate wins the election outright.';
+    }
+
     return (
       <p className="rules">{typeDesc}</p>
     )

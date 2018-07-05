@@ -285,7 +285,7 @@ class Command(BaseCommand):
 
         georgia = Division.objects.get(code_components__postal='GA')
 
-        ga_runoff_day, created = ElectionDay.objects.get_or_create(
+        ga_runoff_day_fed, created = ElectionDay.objects.get_or_create(
             cycle=self.cycle,
             date=date(2019, 1, 8)
         )
@@ -296,9 +296,29 @@ class Command(BaseCommand):
             sender=ElectionEvent
         ):
             ElectionEvent.objects.get_or_create(
-                election_day=ga_runoff_day,
+                election_day=ga_runoff_day_fed,
                 division=georgia,
-                label='{0} {1}'.format(
+                label='{0} {1} (federal offices only)'.format(
+                    georgia.label,
+                    ElectionEvent.GENERAL_RUNOFF
+                ),
+                event_type=ElectionEvent.GENERAL_RUNOFF,
+            )
+
+        ga_runoff_day_state, created = ElectionDay.objects.get_or_create(
+            cycle=self.cycle,
+            date=date(2018, 12, 4)
+        )
+
+        with temp_disconnect_signal(
+            signal=signals.post_save,
+            receiver=election_event_save,
+            sender=ElectionEvent
+        ):
+            ElectionEvent.objects.get_or_create(
+                election_day=ga_runoff_day_state,
+                division=georgia,
+                label='{0} {1} (state offices only)'.format(
                     georgia.label,
                     ElectionEvent.GENERAL_RUNOFF
                 ),

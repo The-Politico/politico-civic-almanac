@@ -1,5 +1,6 @@
 from almanac.models import ElectionEvent
 from almanac.serializers import ElectionEventSerializer
+from django.db.models import Q
 
 from .base import BaseViewSet
 
@@ -16,7 +17,17 @@ class ElectionEventViewSet(BaseViewSet):
         if state is not None:
             queryset = queryset.filter(division__slug=state)
         else:
-            queryset = queryset.exclude(event_type=ElectionEvent.GENERAL)
+            primaries = queryset.exclude(event_type=ElectionEvent.GENERAL)
+            louisiana = queryset.filter(
+                division__slug='louisiana',
+                event_type=ElectionEvent.GENERAL
+            )
+            us_general = queryset.filter(
+                division__code='00',
+                event_type=ElectionEvent.GENERAL
+            )
+
+            return primaries | louisiana | us_general
 
         body = self.request.query_params.get('body', None)
         if body is not None:
@@ -27,6 +38,16 @@ class ElectionEventViewSet(BaseViewSet):
                 queryset = [q for q in queryset if q.has_house_election()]
 
         else:
-            queryset = queryset.exclude(event_type=ElectionEvent.GENERAL)
+            primaries = queryset.exclude(event_type=ElectionEvent.GENERAL)
+            louisiana = queryset.filter(
+                division__slug='louisiana',
+                event_type=ElectionEvent.GENERAL
+            )
+            us_general = queryset.filter(
+                division__code='00',
+                event_type=ElectionEvent.GENERAL
+            )
+
+            return primaries | louisiana | general
 
         return queryset

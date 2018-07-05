@@ -16,11 +16,27 @@ class Event extends React.Component {
 
   render() {
     const header = window.appConfig.link_path ? (
-        <h3><a href={`${window.appConfig.link_path}${this.props.event.division.slug}/`}>
-          {this.props.event.label}
-        </a></h3>
+        <h3>
+          {this.props.event.division.code !== '00' ? (
+            <a href={`${window.appConfig.link_path}${this.props.event.division.slug}/`}>
+              {this.props.event.label}
+            </a>
+          ) : (
+            this.props.event.label
+          )}
+        </h3>
     ) : (
       <h3>{this.props.event.label}</h3>
+    )
+
+    const mobileHeader = window.appConfig.link_path ? (
+        <h2>
+          <a href={`${window.appConfig.link_path}${this.props.event.division.slug}/`}>
+            {this.props.event.division.label}
+          </a>
+        </h2>
+    ) : (
+      <h2>{this.props.event.division.label}</h2>
     )
 
     let tags = [];
@@ -61,11 +77,15 @@ class Event extends React.Component {
       </div>
     ) : null;
 
-    const eventTable = this.props.event.event_type !== 'Primaries Runoff' ? (
-      <EventTable event={this.props.event} />
-    ) : (
-      <p>Runoff elections will occur if necessary per race. We will update this section after the initial primaries when we have more information.</p>
-    );
+    var eventTable = null;
+
+    if (this.props.event.eventType === 'Primaries Runoff' || this.props.event.eventType === 'General Runoff') {
+      eventTable = (<p>Runoff elections will occur if necessary per race.</p>);
+    } else if (this.props.event.division.code === '00') {
+      eventTable = (<p>All states except Louisiana will hold their general election. View individual state pages for voter information.</p>)
+    } else {
+      eventTable = <EventTable event={this.props.event} />
+    }
 
     const id = `event-${this.props.event.election_day.date}-${this.props.event.division.slug}`;
 
@@ -86,7 +106,7 @@ class Event extends React.Component {
                   </div>
                   <div className="col-xs-6">
                     <h5>{this.props.event.event_type}</h5>
-                    <h2>{this.props.event.division.label}</h2>
+                    {mobileHeader}
                   </div>
                   <div className="tags col-xs-3">
                     {tags.map((tag) => (
