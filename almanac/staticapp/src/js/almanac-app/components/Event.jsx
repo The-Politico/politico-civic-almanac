@@ -79,7 +79,7 @@ class Event extends React.Component {
 
     var eventTable = null;
 
-    if (this.props.event.eventType === 'Primaries Runoff' || this.props.event.eventType === 'General Runoff') {
+    if (this.props.event.event_type === 'Primaries Runoff' || this.props.event.event_type === 'General Runoff') {
       eventTable = (<p>Runoff elections will occur if necessary per race.</p>);
     } else if (this.props.event.division.code === '00') {
       eventTable = (<p>All states except Louisiana will hold their general election. View individual state pages for voter information.</p>)

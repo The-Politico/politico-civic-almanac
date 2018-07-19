@@ -26,7 +26,146 @@
 // @import 'graphics';
 @import '../../node_modules/politico-style/scss/elections/states/main.scss';
 
+
+$min-width-xs: 350px;
+$min-width-sm: 576px;
+$min-width-md: 768px;
+$min-width-lg: 992px;
+$min-width-xl: 1200px;
+
 //bootstrap overrides
+
+nav.global{
+  position: relative;
+
+  #global-header {
+    @include clearfix;
+    background: $transparent;
+    border-bottom: 1px solid rgba(180,180,180,0.35);
+
+    #global-header,
+    ul {
+      @include clearfix;
+    }
+
+    #header-contents {
+      padding: 0 1rem;
+    }
+
+    .bt-icon--house svg{
+      height: 25px;
+    }
+
+    .bt-icon--politico {
+      color: $politico-red;
+      font-size: 1.62rem;
+
+      @media (min-width: $min-width-xs) {
+        font-size: 1.68rem;
+        margin-top: 0;
+      }
+
+      @media (min-width: 650px) {
+        font-size: 1.8rem;
+        margin: 5px 0 15px;
+        padding: 0;
+      }
+
+      @media (min-width: $min-width-sm) {
+        font-size: 2.8rem;
+        margin: 5px 0 15px;
+        padding: 0;
+      }
+
+      @media (min-width: $min-width-lg) {
+        font-size: 3.1rem;
+        margin: 5px 0 15px;
+        padding: 0;
+      }
+    }
+
+    a {
+      color: $black;
+
+        &:hover, &:focus{
+          text-decoration: none;
+          opacity: .8;
+        }
+      }
+
+    #global-branding {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      text-align: center;
+
+      a{
+        -webkit-transition: none;
+        transition: none;
+        &:hover{
+          opacity: 1;
+        }
+      }
+    }
+
+    .header-content {
+      -webkit-box-align: center;
+      -ms-flex-pack: justify;
+      -ms-flex-align: center;
+      display: -webkit-box;
+      display: -ms-flexbox;
+      display: flex;
+      -webkit-box-pack: justify;
+      justify-content: space-between;
+      align-items: center;
+      width: 100%;
+      height: 4.25rem;
+
+      @media (min-width: $min-width-xs) {
+        height: 4.25rem;
+      }
+
+      @media (min-width: $min-width-sm) {
+        height: 6.25rem;
+      }
+
+      @media (min-width: $min-width-lg) {
+        height: 6.8rem;
+      }
+      }
+
+      ul {
+        -webkit-box-align: center;
+        -ms-flex-align: center;
+        display: -ms-flexbox;
+        display: flex;
+        font-family: $din;
+        font-variant-ligatures: none;
+        margin-top: 10px;
+        font-weight: 700;
+        font-size: .75rem;
+        letter-spacing: .1rem;
+        text-transform: uppercase;
+        align-items: center;
+        list-style: none;
+        list-style-image: none;
+
+        li{
+          top: auto;
+          left: auto;
+          position: relative;
+
+          > a {
+          background: transparent;
+          display: block;
+          color: rgba(0,0,0,0.85);
+          padding: 0.15rem 0.75rem;
+        }
+        }
+      }
+    }
+}
 
 body {
   padding: 0;
@@ -133,7 +272,7 @@ h6{
       margin-left: 4px;
 
       &.visible {
-        background-color: $gray;
+        background-color: #ddd;
       }
 
       &.selected {
@@ -346,7 +485,7 @@ h6{
   font-size: 30px;
   top: 4px;
   cursor: pointer;
-  padding: 10px;
+  padding: 10px 0;
 }
 
 .react-autosuggest__input {
@@ -578,13 +717,20 @@ h6{
   }
 
   .react-autosuggest__input{
-    text-align: center;
+    text-align: left;
     height: 44px;
-    width: 250px;
+    width: 225px;
+  }
+  .react-autosuggest__container {
+    left: 10px;
+  }
+
+  .clear-suggestions {
+    left: -10px;
   }
 
   .react-autosuggest__container, .react-autosuggest__suggestions-container {
-    width: 250px;
+    width: 225px;
   }
 
   .react-autosuggest__suggestions-container {

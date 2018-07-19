@@ -22,6 +22,17 @@ def serialize_calendar(cycle, division, senate, house):
     ).exclude(
         event_type=ElectionEvent.GENERAL
     ).order_by('election_day__date', 'division__label')
+    louisiana = ElectionEvent.objects.filter(
+        event_type=ElectionEvent.GENERAL,
+        division__slug='louisiana'
+    )
+    us_general = ElectionEvent.objects.filter(
+        event_type=ElectionEvent.GENERAL,
+        division__code='00'
+    )
+
+    events = events | louisiana | us_general
+
     for event in events:
         serialized = ElectionEventSerializer(event)
         data.append(serialized.data)
